@@ -56,6 +56,13 @@ export interface Transaction {
   payment_processor_id: string | null;
   demo: boolean;
   created_at: string;
+  // Payment processor fields (Phase 1)
+  processor?: PaymentProcessor;
+  processor_transaction_id?: string;
+  processor_refund_id?: string;
+  payment_method_id?: string;
+  processor_fee?: number;
+  net_amount?: number;
 }
 
 export interface CardPurchased {
@@ -120,4 +127,17 @@ export interface UserProfile {
   savings_total: number;
   role: UserRole;
   created_at: string;
+  // Payment processor fields (Phase 1)
+  payment_processor?: PaymentProcessor;
+  processor_customer_id?: string;
+}
+
+// Payment types
+export type PaymentProcessor = 'stripe' | 'stax';
+
+export interface PaymentMethodInfo {
+  id: string;
+  last4: string;
+  brand: string;
+  isDefault: boolean;
 }
