@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stashly — Brand Identity & UI Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   STASHLY DESIGN SYSTEM — Fizens-inspired
+   ============================================================ */
+:root {
+  /* Brand Colors */
+  --royal: #2B3FE0;
+  --royal-dark: #1E2FB0;
+  --royal-light: #6B7BF7;
+  --lavender: #E8EAFF;
+  --accent-bg: #F5F6FF;
+  --card-lavender: #EEF0FF;
+
+  /* Neutrals */
+  --black: #0A0A1A;
+  --text-primary: #0A0A1A;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --white: #FFFFFF;
+  --bg: #FAFBFF;
+
+  /* Semantic */
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --error: #EF4444;
+  --error-light: #FEE2E2;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 3px rgba(43, 63, 224, 0.04);
+  --shadow-md: 0 4px 24px rgba(43, 63, 224, 0.08);
+  --shadow-lg: 0 12px 48px rgba(43, 63, 224, 0.12);
+  --shadow-xl: 0 24px 80px rgba(43, 63, 224, 0.14);
+  --shadow-card: 0 2px 16px rgba(43, 63, 224, 0.06);
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --r-full: 999px;
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* Reset */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   CROSSHAIR GRID BACKGROUND PATTERN
+   ============================================================ */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(43,63,224,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.grid-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(43,63,224,0.03) 1px, transparent 1px),
+    linear-gradient(rgba(43,63,224,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px 120px;
+}
+
+.section {
+  margin-bottom: 120px;
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--royal);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 42px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  margin-bottom: 16px;
+}
+
+.section-title .blue { color: var(--royal); }
+
+.section-desc {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   HERO / BRAND HEADER
+   ============================================================ */
+.hero {
+  text-align: center;
+  padding: 60px 0 80px;
+  margin-bottom: 100px;
+}
+
+.hero-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+/* Real Logo */
+.hero-logo-img {
+  height: 72px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Mini logo for overlays/popups */
+.stashly-mini-logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.hero h1 .blue { color: var(--royal); }
+
+.hero p {
+  font-size: 19px;
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+/* Pill CTA Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px 14px 28px;
+  background: var(--royal);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.3,0,.2,1);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: var(--royal-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover .btn-arrow {
+  background: rgba(255,255,255,0.3);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.3,0,.2,1);
+}
+
+.btn-secondary:hover {
+  border-color: var(--royal);
+  color: var(--royal);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   FOUNDATIONS — COLOR & TYPOGRAPHY
+   ============================================================ */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.color-swatch {
+  text-align: center;
+}
+
+.swatch-block {
+  width: 100%;
+  height: 72px;
+  border-radius: var(--r-md);
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.swatch-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.swatch-hex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 40px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.type-label {
+  flex: 0 0 180px;
+}
+
+.type-label-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.type-label-detail {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.type-sample {
+  flex: 1;
+}
+
+/* ============================================================
+   UI SURFACE CARDS — Container for each mockup
+   ============================================================ */
+.surfaces-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.surface-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  padding: 40px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(43,63,224,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.surface-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.surface-card.featured {
+  background: var(--card-lavender);
+  border: 1px solid rgba(43,63,224,0.08);
+}
+
+.surface-card-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--royal);
+  margin-bottom: 8px;
+}
+
+.surface-card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+
+.surface-card-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   1. EXTENSION POPUP (400px)
+   ============================================================ */
+.popup-frame {
+  width: 360px;
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid rgba(43,63,224,0.06);
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.popup-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.popup-logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.popup-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.popup-logo-text {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.popup-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.popup-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.popup-savings-banner {
+  padding: 20px 24px;
+  background: var(--accent-bg);
+  text-align: center;
+}
+
+.popup-savings-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.popup-savings-amount {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--royal);
+  letter-spacing: -0.03em;
+}
+
+.popup-savings-sub {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.popup-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 16px 24px 8px;
+}
+
+.popup-balance-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+.popup-balance-row:hover {
+  background: var(--accent-bg);
+}
+
+.popup-retailer-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--royal);
+  background: var(--lavender);
+}
+
+.popup-retailer-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.popup-retailer-balance {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.popup-footer {
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--gray-100);
+}
+
+.popup-footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.popup-footer-btn:hover {
+  border-color: var(--royal);
+  color: var(--royal);
+}
+
+/* Popup Logged Out State */
+.popup-logged-out {
+  text-align: center;
+  padding: 48px 32px 40px;
+}
+
+.popup-logged-out-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 16px rgba(43,63,224,0.3);
+}
+
+.popup-logged-out-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.popup-logged-out h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+
+.popup-logged-out p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.popup-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px;
+  background: var(--royal);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+
+.popup-signin-btn:hover {
+  background: var(--royal-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.popup-create-link {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.popup-create-link a {
+  color: var(--royal);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ============================================================
+   2. SAVINGS OVERLAY (Checkout injection)
+   ============================================================ */
+.checkout-mock {
+  background: var(--gray-100);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  position: relative;
+  min-height: 440px;
+}
+
+.checkout-mock-header {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+}
+
+.checkout-mock-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.checkout-mock-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* Overlay Card */
+.overlay-card {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 340px;
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 24px;
+  border: 1px solid rgba(43,63,224,0.06);
+  animation: slideUp 0.4s cubic-bezier(.3,0,.2,1) forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.overlay-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.overlay-logo-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.overlay-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.overlay-logo-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.overlay-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.overlay-close:hover {
+  background: var(--gray-200);
+}
+
+.overlay-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success);
+  margin-bottom: 6px;
+}
+
+.overlay-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.overlay-savings-amount {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.overlay-savings-detail {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.overlay-breakdown {
+  background: var(--accent-bg);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.overlay-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.overlay-breakdown-row span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.overlay-breakdown-divider {
+  height: 1px;
+  background: rgba(43,63,224,0.08);
+  margin: 8px 0;
+}
+
+.overlay-breakdown-row.total span:last-child {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.overlay-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  background: var(--royal);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.3s cubic-bezier(.3,0,.2,1);
+}
+
+.overlay-cta:hover {
+  background: var(--royal-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(43,63,224,0.3);
+}
+
+.overlay-cta .arrow-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overlay-footer-link {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.overlay-footer-link:hover {
+  color: var(--royal);
+}
+
+.overlay-footer-secure {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Balance banner inside overlay */
+.overlay-balance-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--lavender);
+  border-radius: var(--r-sm);
+  margin-bottom: 16px;
+}
+
+.overlay-balance-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(43,63,224,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--royal);
+  font-size: 12px;
+}
+
+.overlay-balance-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--royal);
+  font-weight: 500;
+}
+
+.overlay-balance-text strong {
+  font-weight: 700;
+}
+
+.overlay-balance-apply {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--royal);
+  background: var(--white);
+  border: 1.5px solid rgba(43,63,224,0.2);
+  border-radius: var(--r-full);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.overlay-balance-apply:hover {
+  background: var(--royal);
+  color: var(--white);
+  border-color: var(--royal);
+}
+
+/* ============================================================
+   3. CODE DELIVERY PANEL
+   ============================================================ */
+.delivery-panel {
+  width: 360px;
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid rgba(43,63,224,0.06);
+}
+
+.delivery-header {
+  padding: 24px 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.delivery-success-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--success-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.delivery-header h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.delivery-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.delivery-codes {
+  padding: 20px 24px;
+}
+
+.delivery-code-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--accent-bg);
+  border-radius: var(--r-md);
+  margin-bottom: 10px;
+  border: 1px solid rgba(43,63,224,0.04);
+}
+
+.delivery-code-denom {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--royal);
+  background: var(--lavender);
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  white-space: nowrap;
+}
+
+.delivery-code-value {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.delivery-code-copy {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--royal);
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r-full);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delivery-code-copy:hover {
+  border-color: var(--royal);
+  background: var(--lavender);
+}
+
+.delivery-summary {
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+
+.delivery-summary-box {
+  background: var(--accent-bg);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+
+.delivery-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.delivery-summary-row span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.delivery-summary-row.savings span:last-child {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.delivery-actions {
+  padding: 0 24px 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.delivery-auto-apply {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--royal);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delivery-auto-apply:hover {
+  background: var(--royal-dark);
+}
+
+.delivery-done {
+  padding: 12px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r-full);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delivery-done:hover {
+  border-color: var(--text-primary);
+}
+
+/* ============================================================
+   4. AUTO-APPLY PROGRESS TOAST
+   ============================================================ */
+.toast-frame {
+  width: 360px;
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 20px 24px;
+  border: 1px solid rgba(43,63,224,0.06);
+  margin: 0 auto;
+}
+
+.toast-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.toast-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--gray-200);
+  border-top-color: var(--royal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.toast-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.toast-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.toast-step-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.toast-step-icon.done {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.toast-step-icon.active {
+  background: var(--royal);
+  color: white;
+  font-family: var(--font-display);
+}
+
+.toast-step-icon.pending {
+  background: var(--gray-100);
+  color: var(--text-tertiary);
+  font-family: var(--font-display);
+}
+
+.toast-step-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.toast-step-text.pending-text {
+  color: var(--text-tertiary);
+}
+
+.toast-step-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+/* ============================================================
+   5. STACK BREAKDOWN (Expanded View)
+   ============================================================ */
+.breakdown-panel {
+  width: 380px;
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid rgba(43,63,224,0.06);
+}
+
+.breakdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+}
+
+.breakdown-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breakdown-context {
+  padding: 0 24px 16px;
+}
+
+.breakdown-context-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--royal);
+}
+
+.breakdown-cards {
+  padding: 0 24px 16px;
+}
+
+.breakdown-card-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.breakdown-card-qty {
+  width: 36px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.breakdown-card-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.breakdown-card-discount {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success);
+  background: var(--success-light);
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  margin-right: 12px;
+}
+
+.breakdown-card-price {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 72px;
+  text-align: right;
+}
+
+.breakdown-totals {
+  margin: 0 24px 20px;
+  background: var(--accent-bg);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+
+.breakdown-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.breakdown-total-row span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.breakdown-total-row.savings span:last-child {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.breakdown-total-row.balance span:last-child {
+  color: var(--royal);
+  font-weight: 600;
+}
+
+.breakdown-cta {
+  padding: 0 24px 24px;
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+.marquee-section {
+  margin: 0 -40px 120px;
+  overflow: hidden;
+  padding: 32px 0;
+  background: linear-gradient(135deg, var(--royal), #4B5CE8, var(--royal-light));
+}
+
+.marquee-track {
+  display: flex;
+  gap: 64px;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-text {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  opacity: 0.95;
+}
+
+.marquee-dot {
+  color: rgba(255,255,255,0.4);
+}
+
+/* ============================================================
+   PARTNER LOGO BAR
+   ============================================================ */
+.partner-bar {
+  background: white;
+  border-radius: var(--r-xl);
+  padding: 36px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
+.partner-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.partner-logo img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.45);
+  transition: filter 0.3s ease;
+}
+
+.partner-logo:hover img {
+  filter: grayscale(0) opacity(1);
+}
+
+/* ============================================================
+   BUTTON COMPONENTS SHOWCASE
+   ============================================================ */
+.btn-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 32px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .surfaces-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 40px; }
+  .page { padding: 40px 20px 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="page">
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="hero-logo">
+      <img src="Stashly_Logo.png" alt="stashly" class="hero-logo-img">
+    </div>
+
+    <h1>Save money at <span class="blue">every checkout</span></h1>
+    <p>Automatically stack discounted gift cards, coupon codes, and cashback at your favorite stores. Like Honey, but better.</p>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <button class="btn-primary">
+        Add to Chrome
+        <span class="btn-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      <button class="btn-secondary">Learn more</button>
+    </div>
+  </section>
+
+  <!-- ==================== MARQUEE ==================== -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-text">Save at Apple <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Chipotle <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Domino's <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Riot Games <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at eBay <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at NFL Shop <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Fanatics <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Apple <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Chipotle <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Domino's <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Riot Games <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at eBay <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at NFL Shop <span class="marquee-dot">&bull;</span></span>
+      <span class="marquee-text">Save at Fanatics <span class="marquee-dot">&bull;</span></span>
+    </div>
+  </div>
+
+  <!-- ==================== FOUNDATIONS ==================== -->
+  <section class="section">
+    <div class="section-label">Foundations</div>
+    <div class="section-title">Visual <span class="blue">Language</span></div>
+    <div class="section-desc">A premium palette built for trust and clarity. Royal blue for brand, emerald for savings, generous white space for breathing room.</div>
+
+    <!-- Color Palette -->
+    <div style="margin-top: 48px;">
+      <div class="section-label">Palette</div>
+      <div class="palette-grid">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #2B3FE0;"></div>
+          <div class="swatch-name">Royal Blue</div>
+          <div class="swatch-hex">#2B3FE0</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #6B7BF7;"></div>
+          <div class="swatch-name">Medium Blue</div>
+          <div class="swatch-hex">#6B7BF7</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #E8EAFF;"></div>
+          <div class="swatch-name">Lavender</div>
+          <div class="swatch-hex">#E8EAFF</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #F5F6FF;"></div>
+          <div class="swatch-name">Accent BG</div>
+          <div class="swatch-hex">#F5F6FF</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #0A0A1A;"></div>
+          <div class="swatch-name">Text Primary</div>
+          <div class="swatch-hex">#0A0A1A</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #6B7280;"></div>
+          <div class="swatch-name">Text Secondary</div>
+          <div class="swatch-hex">#6B7280</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #10B981;"></div>
+          <div class="swatch-name">Success</div>
+          <div class="swatch-hex">#10B981</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background: #EF4444;"></div>
+          <div class="swatch-name">Error</div>
+          <div class="swatch-hex">#EF4444</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div style="margin-top: 64px;">
+      <div class="section-label">Typography</div>
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Plus Jakarta Sans</div>
+          <div class="type-label-detail">Display / 800</div>
+        </div>
+        <div class="type-sample" style="font-family: var(--font-display); font-weight: 800; font-size: 36px; letter-spacing: -0.02em;">
+          Save <span style="color: var(--royal);">$110.50</span>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Inter</div>
+          <div class="type-label-detail">Body / 400</div>
+        </div>
+        <div class="type-sample" style="font-family: var(--font-body); font-size: 16px; color: var(--text-secondary);">
+          Buy discounted gift cards and save at every checkout.
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">IBM Plex Mono</div>
+          <div class="type-label-detail">Data / 600</div>
+        </div>
+        <div class="type-sample" style="font-family: var(--font-mono); font-weight: 600; font-size: 16px; color: var(--royal);">
+          $1,037.00 &rarr; $939.50
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div style="margin-top: 64px;">
+      <div class="section-label">Buttons</div>
+      <div class="btn-showcase">
+        <button class="btn-primary">
+          Save $143.50
+          <span class="btn-arrow">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <button class="btn-secondary">View breakdown</button>
+        <button class="btn-secondary" style="border-color: var(--royal); color: var(--royal);">Apply</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PARTNER LOGOS ==================== -->
+  <section class="section">
+    <div class="section-label">Supported Retailers</div>
+    <div class="section-title">Works at your <span class="blue">favorite stores</span></div>
+    <div class="partner-bar">
+      <span class="partner-logo">
+        <img src="https://cdn.simpleicons.org/apple/000000" alt="Apple" style="height: 28px;">
+      </span>
+      <span class="partner-logo">
+        <img src="chipotle_pepper_detail.svg" alt="Chipotle" style="height: 32px;">
+      </span>
+      <span class="partner-logo">
+        <img src="dominos.svg" alt="Domino's" style="height: 30px;">
+      </span>
+      <span class="partner-logo">
+        <img src="https://cdn.simpleicons.org/riotgames/EB0029" alt="Riot Games" style="height: 28px;">
+      </span>
+      <span class="partner-logo">
+        <img src="https://cdn.simpleicons.org/ebay/E53238" alt="eBay" style="height: 26px;">
+      </span>
+      <span class="partner-logo">
+        <img src="nfl.svg" alt="NFL" style="height: 34px;">
+      </span>
+      <span class="partner-logo">
+        <img src="https://static.cdnlogo.com/logos/f/31/fanatics.svg" alt="Fanatics" style="height: 32px;">
+      </span>
+    </div>
+  </section>
+
+  <!-- ==================== SAVINGS OVERLAY ==================== -->
+  <section class="section">
+    <div class="section-label">Checkout Overlay</div>
+    <div class="section-title">Savings <span class="blue">Detection</span></div>
+    <div class="section-desc">Appears bottom-right on supported checkout pages. One clear action, real money saved.</div>
+
+    <div class="surfaces-grid">
+      <!-- Main Overlay -->
+      <div class="surface-card full-width">
+        <div class="surface-card-label">On retailer checkout — Apple</div>
+        <div class="checkout-mock">
+          <div class="checkout-mock-header">Order Summary</div>
+          <div class="checkout-mock-item"><span>MacBook Air M4 — Midnight</span><span style="color: var(--text-tertiary);">$1,099.00</span></div>
+          <div class="checkout-mock-item"><span>AppleCare+</span><span style="color: var(--text-tertiary);">$179.00</span></div>
+          <div class="checkout-mock-item"><span>USB-C Cable</span><span style="color: var(--text-tertiary);">$19.00</span></div>
+          <div class="checkout-mock-total"><span>Total</span><span style="color: var(--text-secondary);">$1,297.00</span></div>
+
+          <div class="overlay-card">
+            <div class="overlay-header">
+              <div class="overlay-logo">
+                <div class="overlay-logo-icon"><img src="Stashly_Icon.png" alt="S"></div>
+                <div class="overlay-logo-text">stashly</div>
+              </div>
+              <button class="overlay-close">&times;</button>
+            </div>
+
+            <div class="overlay-status">
+              <span class="overlay-status-dot"></span>
+              Savings found
+            </div>
+
+            <div class="overlay-savings-amount">Save $143.50</div>
+            <div class="overlay-savings-detail">13 discounted Apple gift cards</div>
+
+            <div class="overlay-breakdown">
+              <div class="overlay-breakdown-row">
+                <span>You pay</span>
+                <span>$1,156.50</span>
+              </div>
+              <div class="overlay-breakdown-row">
+                <span>Gift card value</span>
+                <span>$1,300.00</span>
+              </div>
+              <div class="overlay-breakdown-divider"></div>
+              <div class="overlay-breakdown-row total">
+                <span>Total savings</span>
+                <span>&minus;$143.50</span>
+              </div>
+            </div>
+
+            <button class="overlay-cta">
+              Save $143.50
+              <span class="arrow-circle">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+
+            <div class="overlay-footer">
+              <a class="overlay-footer-link">View breakdown</a>
+              <span class="overlay-footer-secure">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1.5" y="4.5" width="7" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M3 4.5V3a2 2 0 114 0v1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                Encrypted
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With Balance -->
+      <div class="surface-card full-width">
+        <div class="surface-card-label">With existing Stashly balance — Chipotle</div>
+        <div class="checkout-mock">
+          <div class="checkout-mock-header">Order Summary</div>
+          <div class="checkout-mock-item"><span>Burrito Bowl (Steak)</span><span style="color: var(--text-tertiary);">$12.95</span></div>
+          <div class="checkout-mock-item"><span>Large Chips & Guac</span><span style="color: var(--text-tertiary);">$6.30</span></div>
+          <div class="checkout-mock-total"><span>Total</span><span style="color: var(--text-secondary);">$19.25</span></div>
+
+          <div class="overlay-card">
+            <div class="overlay-header">
+              <div class="overlay-logo">
+                <div class="overlay-logo-icon"><img src="Stashly_Icon.png" alt="S"></div>
+                <div class="overlay-logo-text">stashly</div>
+              </div>
+              <button class="overlay-close">&times;</button>
+            </div>
+
+            <div class="overlay-balance-banner">
+              <div class="overlay-balance-icon">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6h12" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="overlay-balance-text"><strong>$8.25</strong> Stashly balance at Chipotle</div>
+              <button class="overlay-balance-apply">Apply</button>
+            </div>
+
+            <div class="overlay-status">
+              <span class="overlay-status-dot"></span>
+              Savings found
+            </div>
+
+            <div class="overlay-savings-amount">Save $2.50</div>
+            <div class="overlay-savings-detail">1 discounted Chipotle gift card</div>
+
+            <div class="overlay-breakdown">
+              <div class="overlay-breakdown-row">
+                <span>Balance applied</span>
+                <span style="color: var(--success);">&minus;$8.25</span>
+              </div>
+              <div class="overlay-breakdown-row">
+                <span>New gift card ($25)</span>
+                <span>$22.50</span>
+              </div>
+              <div class="overlay-breakdown-divider"></div>
+              <div class="overlay-breakdown-row" style="">
+                <span>New balance after</span>
+                <span style="color: var(--royal); font-weight: 700;">$16.00</span>
+              </div>
+            </div>
+
+            <button class="overlay-cta">
+              Save $2.50
+              <span class="arrow-circle">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+
+            <div class="overlay-footer">
+              <a class="overlay-footer-link">View breakdown</a>
+              <span class="overlay-footer-secure">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1.5" y="4.5" width="7" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M3 4.5V3a2 2 0 114 0v1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                Encrypted
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EXTENSION POPUP ==================== -->
+  <section class="section">
+    <div class="section-label">Extension Popup</div>
+    <div class="section-title">Quick <span class="blue">Access</span></div>
+    <div class="section-desc">At-a-glance savings and balances without leaving the page.</div>
+
+    <div class="surfaces-grid">
+      <!-- Logged In -->
+      <div class="surface-card featured">
+        <div class="surface-card-label">Logged in</div>
+        <div class="popup-frame">
+          <div class="popup-header">
+            <div class="popup-logo">
+              <div class="popup-logo-icon"><img src="Stashly_Icon.png" alt="S"></div>
+              <div class="popup-logo-text">stashly</div>
+            </div>
+            <div class="popup-status">
+              <span class="popup-status-dot"></span>
+              Active
+            </div>
+          </div>
+
+          <div class="popup-savings-banner">
+            <div class="popup-savings-label">Lifetime savings</div>
+            <div class="popup-savings-amount">$247.50</div>
+            <div class="popup-savings-sub">across 18 purchases</div>
+          </div>
+
+          <div class="popup-section-label">Stashly Balances</div>
+
+          <div class="popup-balance-row">
+            <div class="popup-retailer-icon">AP</div>
+            <div class="popup-retailer-name">Apple</div>
+            <div class="popup-retailer-balance">$13.00</div>
+          </div>
+          <div class="popup-balance-row">
+            <div class="popup-retailer-icon">CH</div>
+            <div class="popup-retailer-name">Chipotle</div>
+            <div class="popup-retailer-balance">$8.25</div>
+          </div>
+          <div class="popup-balance-row">
+            <div class="popup-retailer-icon">RG</div>
+            <div class="popup-retailer-name">Riot Games</div>
+            <div class="popup-retailer-balance">$4.50</div>
+          </div>
+
+          <div class="popup-footer">
+            <button class="popup-footer-btn">
+              Open Dashboard
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5h5v5M9.5 2.5L2.5 9.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logged Out -->
+      <div class="surface-card">
+        <div class="surface-card-label">Logged out</div>
+        <div class="popup-frame">
+          <div class="popup-header">
+            <div class="popup-logo">
+              <div class="popup-logo-icon"><img src="Stashly_Icon.png" alt="S"></div>
+              <div class="popup-logo-text">stashly</div>
+            </div>
+          </div>
+          <div class="popup-logged-out">
+            <div class="popup-logged-out-icon"><img src="Stashly_Icon.png" alt="stashly"></div>
+            <h3>Save at every checkout</h3>
+            <p>Sign in to find discounted gift cards and save automatically at checkout.</p>
+            <button class="popup-signin-btn">
+              Sign in to Stashly
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="popup-create-link">No account? <a href="#">Create one</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CODE DELIVERY ==================== -->
+  <section class="section">
+    <div class="section-label">Code Delivery</div>
+    <div class="section-title">Purchase <span class="blue">Complete</span></div>
+    <div class="section-desc">Codes delivered with copy actions and one-click auto-apply. The payoff moment.</div>
+
+    <div class="surfaces-grid">
+      <div class="surface-card featured">
+        <div class="surface-card-label">Gift card codes</div>
+        <div class="delivery-panel">
+          <div class="delivery-header">
+            <div class="delivery-success-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10l3.5 3.5L15 7" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Codes ready</h3>
+            <p>3 Apple gift cards &middot; Saved $26.50</p>
+          </div>
+
+          <div class="delivery-codes">
+            <div class="delivery-code-item">
+              <span class="delivery-code-denom">$100</span>
+              <span class="delivery-code-value">AXKN-8R4F-L4HN</span>
+              <button class="delivery-code-copy">Copy</button>
+            </div>
+            <div class="delivery-code-item">
+              <span class="delivery-code-denom">$100</span>
+              <span class="delivery-code-value">BMQL-K7T2-Y8DJ</span>
+              <button class="delivery-code-copy">Copy</button>
+            </div>
+            <div class="delivery-code-item">
+              <span class="delivery-code-denom">$50</span>
+              <span class="delivery-code-value">PLSN-3V6A-Q2WF</span>
+              <button class="delivery-code-copy">Copy</button>
+            </div>
+          </div>
+
+          <div class="delivery-summary">
+            <div class="delivery-summary-box">
+              <div class="delivery-summary-row"><span>You paid</span><span>$223.50</span></div>
+              <div class="delivery-summary-row"><span>Card value</span><span>$250.00</span></div>
+              <div class="delivery-summary-row savings"><span>Saved</span><span>$26.50</span></div>
+            </div>
+          </div>
+
+          <div class="delivery-actions">
+            <button class="delivery-auto-apply">
+              Auto-apply all
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="delivery-done">Done</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-Apply Toast -->
+      <div class="surface-card">
+        <div class="surface-card-label">Auto-apply progress</div>
+        <div class="surface-card-desc">Real-time feedback as codes are applied to checkout.</div>
+        <div class="toast-frame">
+          <div class="toast-header">
+            <div class="toast-spinner"></div>
+            <div class="toast-title">Applying gift cards</div>
+          </div>
+          <div class="toast-step">
+            <div class="toast-step-icon done">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 6l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="toast-step-text">$100 card applied</span>
+            <span class="toast-step-code">...L4HN</span>
+          </div>
+          <div class="toast-step">
+            <div class="toast-step-icon active">2</div>
+            <span class="toast-step-text" style="font-weight: 600;">Applying $100 card</span>
+            <span class="toast-step-code">...Y8DJ</span>
+          </div>
+          <div class="toast-step">
+            <div class="toast-step-icon pending">3</div>
+            <span class="toast-step-text pending-text">$50 card</span>
+            <span class="toast-step-code" style="opacity: 0.5;">...Q2WF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STACK BREAKDOWN ==================== -->
+  <section class="section">
+    <div class="section-label">Expanded View</div>
+    <div class="section-title">Stack <span class="blue">Breakdown</span></div>
+    <div class="section-desc">Full per-card detail when the user wants to see exactly what they're getting.</div>
+
+    <div class="surfaces-grid">
+      <div class="surface-card featured" style="grid-column: 1 / -1; display: flex; justify-content: center;">
+        <div>
+          <div class="surface-card-label" style="margin-bottom: 20px;">$1,037 cart breakdown</div>
+          <div class="breakdown-panel">
+            <div class="breakdown-header">
+              <div class="breakdown-logo">
+                <div class="overlay-logo-icon"><img src="Stashly_Icon.png" alt="S"></div>
+                <div class="overlay-logo-text">stashly</div>
+              </div>
+              <button class="overlay-close">&times;</button>
+            </div>
+
+            <div class="breakdown-context">
+              <div class="breakdown-context-text">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--royal); flex-shrink: 0;"></span>
+                Apple &middot; $1,037.00 cart
+              </div>
+            </div>
+
+            <div class="breakdown-cards">
+              <div class="breakdown-card-row">
+                <span class="breakdown-card-qty">10&times;</span>
+                <span class="breakdown-card-name">$100 gift card</span>
+                <span class="breakdown-card-discount">&minus;10.5%</span>
+                <span class="breakdown-card-price">$895.00</span>
+              </div>
+              <div class="breakdown-card-row">
+                <span class="breakdown-card-qty">1&times;</span>
+                <span class="breakdown-card-name">$50 gift card</span>
+                <span class="breakdown-card-discount">&minus;11%</span>
+                <span class="breakdown-card-price">$44.50</span>
+              </div>
+            </div>
+
+            <div class="breakdown-totals">
+              <div class="breakdown-total-row">
+                <span>Gift card value</span>
+                <span>$1,050.00</span>
+              </div>
+              <div class="breakdown-total-row">
+                <span>You pay</span>
+                <span>$939.50</span>
+              </div>
+              <div class="overlay-breakdown-divider"></div>
+              <div class="breakdown-total-row savings">
+                <span>Total savings</span>
+                <span>&minus;$110.50</span>
+              </div>
+              <div class="breakdown-total-row balance">
+                <span>Stashly balance after</span>
+                <span>$13.00</span>
+              </div>
+            </div>
+
+            <div class="breakdown-cta">
+              <button class="overlay-cta" style="margin-bottom: 0;">
+                Purchase cards
+                <span class="arrow-circle">
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== COMPONENT REFERENCE ==================== -->
+  <section class="section" style="margin-bottom: 40px;">
+    <div class="section-label">Reference</div>
+    <div class="section-title">Design <span class="blue">Tokens</span></div>
+    <div class="section-desc">Quick reference for shadows, radii, and spacing used across all surfaces.</div>
+
+    <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+      <div class="surface-card">
+        <div class="surface-card-label">Border Radius</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; background: var(--lavender); border-radius: 8px;"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Small</div><div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">8px</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; background: var(--lavender); border-radius: 12px;"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Medium</div><div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">12px</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; background: var(--lavender); border-radius: 16px;"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Large</div><div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">16px</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 60px; height: 32px; background: var(--lavender); border-radius: 999px;"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Full</div><div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">999px</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="surface-card">
+        <div class="surface-card-label">Shadows</div>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 32px; background: white; border-radius: 8px; box-shadow: var(--shadow-sm);"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Small</div><div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">blue tint 0.04</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 32px; background: white; border-radius: 8px; box-shadow: var(--shadow-md);"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Medium</div><div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">blue tint 0.08</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 32px; background: white; border-radius: 8px; box-shadow: var(--shadow-lg);"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">Large</div><div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">blue tint 0.12</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 32px; background: white; border-radius: 8px; box-shadow: var(--shadow-xl);"></div>
+            <div><div style="font-size: 13px; font-weight: 600;">XL</div><div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">blue tint 0.14</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="surface-card">
+        <div class="surface-card-label">Spacing</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 8px; height: 8px; background: var(--royal); border-radius: 2px;"></div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">8px — tight</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 16px; height: 16px; background: var(--royal); border-radius: 3px; opacity: 0.8;"></div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">16px — compact</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 24px; height: 24px; background: var(--royal); border-radius: 4px; opacity: 0.6;"></div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">24px — default</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 32px; height: 32px; background: var(--royal); border-radius: 5px; opacity: 0.4;"></div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">32px — section</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 24px; background: var(--royal); border-radius: 5px; opacity: 0.2;"></div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">48px — spacious</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

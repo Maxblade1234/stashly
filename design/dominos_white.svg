@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="200" height="200">
+  <defs>
+    <mask id="domino-mask">
+      <!-- White = visible, Black = hidden -->
+      <rect width="35" height="35" fill="black"/>
+      
+      <!-- The full domino diamond shape - visible -->
+      <path d="M17.438 0.5a1.21 1.21 0 0 0-.862.356L0.856 16.575a1.221 1.221 0 0 0 0 1.724l15.719 15.72c.229.229.536.355.862.355s.633-.126.862-.355l15.719-15.72a1.21 1.21 0 0 0 .355-.861 1.21 1.21 0 0 0-.355-.862L18.299.856A1.206 1.206 0 0 0 17.438.5z" fill="white"/>
+      
+      <!-- Dots as cutouts (black = transparent) -->
+      <!-- Top-right dot (1 dot) -->
+      <circle cx="17.6" cy="8.7" r="2.2" fill="black"/>
+      <!-- Bottom-left dots (2 dots) -->
+      <circle cx="5.9" cy="17.5" r="2.2" fill="black"/>
+      <circle cx="11.8" cy="17.6" r="2.2" fill="black"/>
+      
+      <!-- Dividing line between the two halves -->
+      <line x1="9.5" y1="9" x2="25.5" y2="25" stroke="black" stroke-width="0.8"/>
+    </mask>
+  </defs>
+  
+  <!-- Apply the mask to a white rectangle -->
+  <rect width="35" height="35" fill="white" mask="url(#domino-mask)"/>
+</svg>
