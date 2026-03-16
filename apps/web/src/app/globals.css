@@ -1,38 +1,139 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --stashly-blue: #2B3FE0;
-  --stashly-blue-light: #E8EBFF;
-  --stashly-green: #00C853;
+  /* Meridian Design System */
+  --background: #FDFAF6;
+  --background-alt: #F2EDE5;
+  --surface: #FFFFFF;
+  --dark: #1A1A1A;
+  --text-primary: #1A1A1A;
+  --text-body: #6B6B6B;
+  --text-muted: #9A9A9A;
+  --accent: #C8E640;
+  --accent-hover: #B8D636;
+  --accent-text: #1A1A1A;
+  --savings: #2D7A2F;
+  --border: #E8E3DB;
+
+  /* Legacy compat */
+  --foreground: #1A1A1A;
+  --stashly-green: #2D7A2F;
   --stashly-green-light: #E8FAF0;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
-  --color-stashly-blue: var(--stashly-blue);
-  --color-stashly-blue-light: var(--stashly-blue-light);
-  --color-stashly-green: var(--stashly-green);
-  --color-stashly-green-light: var(--stashly-green-light);
-  --font-sans: var(--font-body);
+  --color-surface: var(--surface);
+  --color-dark: var(--dark);
+  --color-text-primary: var(--text-primary);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-savings: var(--savings);
+  --color-border: var(--border);
+  --font-sans: var(--font-outfit);
   --font-mono: var(--font-mono);
-  --font-display: var(--font-display);
+  --font-display: var(--font-outfit);
 }
 
+/* Base styles */
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  color: var(--text-body);
+  font-family: var(--font-outfit), 'Outfit', Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  line-height: 1.1;
 }
 
 /* Smooth transitions for interactive elements */
 a, button {
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
-/* Custom scrollbar */
+/* ========================
+   Scroll Reveal Animations
+   ======================== */
+
+/* Elements are always visible by default (progressive enhancement) */
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* When JS has initialized the observer, hide elements that haven't been revealed yet */
+.reveal-ready .reveal:not(.visible) {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-ready .reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================
+   Logo Ticker Animation
+   ======================== */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  animation: ticker-scroll 30s linear infinite;
+  width: max-content;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ========================
+   Accordion Transitions
+   ======================== */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease;
+  opacity: 0;
+}
+
+.accordion-content.open {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.accordion-icon {
+  transition: transform 0.3s ease;
+}
+
+.accordion-icon.open {
+  transform: rotate(45deg);
+}
+
+/* ========================
+   Custom Scrollbar
+   ======================== */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -42,10 +143,18 @@ a, button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--border);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--text-muted);
+}
+
+/* ========================
+   Selection Color
+   ======================== */
+::selection {
+  background: var(--accent);
+  color: var(--accent-text);
 }

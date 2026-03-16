@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Outfit, IBM_Plex_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-display",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -23,7 +18,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Stashly — Save More at Checkout",
-  description: "Save up to 15% at checkout with discounted gift cards. Works at Apple, Chipotle, eBay, and more.",
+  description:
+    "Save up to 15% at checkout with discounted gift cards. Works at Apple, Chipotle, eBay, and more.",
 };
 
 export default function RootLayout({
@@ -33,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plusJakarta.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-white`}>
+      <body
+        className={`${outfit.variable} ${ibmPlexMono.variable} antialiased`}
+        style={{ backgroundColor: "#FDFAF6" }}
+      >
         <Navbar />
         <main className="pt-16">
           <ErrorBoundary>{children}</ErrorBoundary>
