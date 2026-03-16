@@ -1,0 +1,8 @@
+{
+  "name": "stashly",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
