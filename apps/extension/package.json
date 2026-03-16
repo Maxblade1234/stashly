@@ -1,0 +1,9 @@
+{
+  "name": "@stashly/extension",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build:dev": "node build.js --env=dev",
+    "build:prod": "node build.js --env=prod"
+  }
+}
