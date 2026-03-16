@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { StripeAdapter } from '../StripeAdapter';
+import { PaymentError } from '../types';
 
 const hasStripeKey = !!process.env.STRIPE_SECRET_KEY;
 
@@ -102,5 +103,31 @@ describe('StripeAdapter constructor validation', () => {
     delete process.env.STRIPE_SECRET_KEY;
     expect(() => new StripeAdapter()).toThrow('STRIPE_SECRET_KEY is required');
     if (original) process.env.STRIPE_SECRET_KEY = original;
+  });
+
+  it('throws PaymentError for invalid charge amount', async () => {
+    const original = process.env.STRIPE_SECRET_KEY;
+    process.env.STRIPE_SECRET_KEY = 'sk_test_fake_key_for_validation';
+    try {
+      const adapter = new StripeAdapter();
+      await expect(adapter.chargeCustomer({
+        customerId: 'cus_test', paymentMethodId: 'pm_test',
+        amount: -100, currency: 'usd',
+      })).rejects.toThrow(PaymentError);
+      await expect(adapter.chargeCustomer({
+        customerId: 'cus_test', paymentMethodId: 'pm_test',
+        amount: 0, currency: 'usd',
+      })).rejects.toThrow(PaymentError);
+      await expect(adapter.chargeCustomer({
+        customerId: 'cus_test', paymentMethodId: 'pm_test',
+        amount: 10.5, currency: 'usd',
+      })).rejects.toThrow(PaymentError);
+    } finally {
+      if (original) {
+        process.env.STRIPE_SECRET_KEY = original;
+      } else {
+        delete process.env.STRIPE_SECRET_KEY;
+      }
+    }
   });
 });
