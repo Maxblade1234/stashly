@@ -4,6 +4,9 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import StackBreakdown from '@/components/StackBreakdown';
 import PurchaseConfirmation from '@/components/PurchaseConfirmation';
+import SavedCardPill from '@/components/SavedCardPill';
+import StripeProvider from '@/components/StripeProvider';
+import PaymentInput from '@/components/PaymentInput';
 import type { StackRecommendation, PurchaseResponse } from '@stashly/shared';
 import { ArrowLeft, Loader2, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
@@ -34,6 +37,12 @@ function BuyPageContent() {
   const [purchasing, setPurchasing] = useState(false);
   const [error, setError] = useState('');
 
+  const isDemoMode = process.env.NEXT_PUBLIC_STASHLY_MODE === 'demo';
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
+  const [showNewCard, setShowNewCard] = useState(false);
+  const [loadingMethods, setLoadingMethods] = useState(false);
+
   // Auto-fetch stack if amount is provided
   useEffect(() => {
     if (amountParam && retailerId) {
@@ -63,6 +72,23 @@ function BuyPageContent() {
       const data = await res.json();
       setStack(data.stack);
       setRetailerName(data.stack.retailer_name);
+
+      // Fetch payment methods in live mode
+      if (process.env.NEXT_PUBLIC_STASHLY_MODE !== 'demo') {
+        setLoadingMethods(true);
+        try {
+          const pmRes = await fetch('/api/payment-methods');
+          const pmData = await pmRes.json();
+          const methods = pmData.methods || [];
+          setPaymentMethods(methods);
+          const defaultMethod = methods.find((m: any) => m.isDefault);
+          if (defaultMethod) setSelectedMethodId(defaultMethod.id);
+        } catch {
+          // Non-fatal — user can still add a new card
+        } finally {
+          setLoadingMethods(false);
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -82,6 +108,7 @@ function BuyPageContent() {
         body: JSON.stringify({
           retailer_id: retailerId,
           cart_total: stack.cart_total,
+          ...(selectedMethodId && { payment_method_id: selectedMethodId }),
         }),
       });
 
@@ -191,9 +218,78 @@ function BuyPageContent() {
         <>
           <StackBreakdown stack={stack} />
 
+          {/* Payment method selection — live mode only */}
+          {!isDemoMode && (
+            <div className="mt-4 mb-2">
+              {loadingMethods ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 size={16} className="animate-spin text-gray-400" />
+                </div>
+              ) : paymentMethods.length > 0 && !showNewCard ? (
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-gray-500 mb-2">Pay with</p>
+                  {paymentMethods.map((m: any) => (
+                    <SavedCardPill
+                      key={m.id}
+                      last4={m.last4}
+                      brand={m.brand}
+                      isDefault={m.isDefault}
+                      selected={selectedMethodId === m.id}
+                      onSelect={() => setSelectedMethodId(m.id)}
+                    />
+                  ))}
+                  <button
+                    onClick={() => setShowNewCard(true)}
+                    className="text-xs font-medium hover:opacity-80"
+                    style={{ color: '#2B3FE0' }}
+                  >
+                    + Use a different card
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-xs font-medium text-gray-500 mb-2">
+                    {paymentMethods.length > 0 ? 'Add a new card' : 'Add a payment method'}
+                  </p>
+                  <StripeProvider>
+                    <PaymentInput
+                      onTokenized={async (token: string) => {
+                        try {
+                          const res = await fetch('/api/payment-methods', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ token }),
+                          });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setPaymentMethods(prev => [...prev, data]);
+                            setSelectedMethodId(data.id);
+                            setShowNewCard(false);
+                          }
+                        } catch {
+                          // Error handled by PaymentInput
+                        }
+                      }}
+                      onError={(msg: string) => setError(msg)}
+                      buttonText="Save Card"
+                    />
+                  </StripeProvider>
+                  {paymentMethods.length > 0 && (
+                    <button
+                      onClick={() => setShowNewCard(false)}
+                      className="mt-2 text-xs text-gray-400 hover:text-gray-600"
+                    >
+                      Use saved card instead
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <button
             onClick={handlePurchase}
-            disabled={purchasing}
+            disabled={purchasing || (!isDemoMode && !selectedMethodId)}
             className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-white font-bold text-sm transition-all hover:shadow-lg disabled:opacity-50"
             style={{ backgroundColor: '#00C853' }}
           >
