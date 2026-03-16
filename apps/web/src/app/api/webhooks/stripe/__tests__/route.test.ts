@@ -25,6 +25,7 @@ function createChainMock(resolvedValue: any) {
   chain.single = vi.fn().mockResolvedValue(resolvedValue);
   chain.insert = vi.fn().mockResolvedValue({ error: null });
   chain.update = vi.fn().mockReturnValue(chain);
+  chain.upsert = vi.fn().mockReturnValue(chain);
   return chain;
 }
 
@@ -34,6 +35,10 @@ const mockAdminClient = {
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => mockAdminClient),
+}));
+
+vi.mock('@/lib/inventory-client', () => ({
+  unreserveCards: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe('POST /api/webhooks/stripe', () => {
@@ -77,15 +82,13 @@ describe('POST /api/webhooks/stripe', () => {
       type: 'payment_intent.succeeded',
       data: { id: 'pi_123', metadata: { transactionId: 'txn_abc' } },
     });
-    // First from call: check for existing event (none found)
-    // Second from call: insert webhook event
-    // Third from call: handlePaymentSucceeded -> select transaction
-    const selectChain = createChainMock({ data: null });
-    const insertChain = createChainMock({ data: null });
+    // First from call: upsert webhook event (returns inserted row)
+    // Second from call: handlePaymentSucceeded -> select transaction
+    const upsertChain = createChainMock({ data: null });
+    upsertChain.select = vi.fn().mockResolvedValue({ data: [{ id: 'evt_123' }] });
     const txnSelectChain = createChainMock({ data: null }); // no txn found
     mockAdminClient.from
-      .mockReturnValueOnce(selectChain)
-      .mockReturnValueOnce(insertChain)
+      .mockReturnValueOnce(upsertChain)
       .mockReturnValueOnce(txnSelectChain);
 
     const { POST } = await import('../route');
@@ -106,10 +109,10 @@ describe('POST /api/webhooks/stripe', () => {
       type: 'payment_intent.succeeded',
       data: {},
     });
-    // Return existing event for the select query
-    mockAdminClient.from.mockReturnValue(
-      createChainMock({ data: { id: 'evt_dup' } }),
-    );
+    // Upsert returns empty array for duplicate (ignoreDuplicates)
+    const dupChain = createChainMock({ data: null });
+    dupChain.select = vi.fn().mockResolvedValue({ data: [] });
+    mockAdminClient.from.mockReturnValue(dupChain);
 
     const { POST } = await import('../route');
     const req = new Request('http://localhost/api/webhooks/stripe', {

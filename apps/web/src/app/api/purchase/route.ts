@@ -204,58 +204,71 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Payment not completed. Please try again.' }, { status: 402 });
     }
 
-    // Payment succeeded — mark cards as sold and get codes
-    const soldCards = await releaseCards(transactionId);
-    const codes = (soldCards.cards || []).map((c: any) => ({
-      denomination: c.denomination,
-      code: c.code,
-      pin: c.pin || null,
-    }));
-
-    // Update transaction record
-    await supabase.from('transactions').update({
-      status: 'completed',
-      processor: process.env.PAYMENT_PROCESSOR || 'stripe',
-      processor_transaction_id: charge.processorRef,
-      payment_method_id: payment_method_id,
-      cards_purchased: codes.map((c: any) => ({
+    // Payment succeeded — separate try/catch for post-charge processing
+    try {
+      const soldCards = await releaseCards(transactionId);
+      const codes = (soldCards.cards || []).map((c: any) => ({
         denomination: c.denomination,
-        cost: stack.cards.find((sc: any) => sc.denomination === c.denomination)?.price_per_card || 0,
-        code_last4: c.code.slice(-4),
-      })),
-    }).eq('id', transactionId);
+        code: c.code,
+        pin: c.pin || null,
+      }));
 
-    // Update Stashly balance for residual
-    if (stack.residual_balance > 0) {
-      const { data: existing } = await supabase
-        .from('stashly_balances')
-        .select('id, balance')
-        .eq('user_id', user.id)
-        .eq('retailer_id', retailer_id)
-        .single();
+      // Update transaction record
+      await supabase.from('transactions').update({
+        status: 'completed',
+        processor: process.env.PAYMENT_PROCESSOR || 'stripe',
+        processor_transaction_id: charge.processorRef,
+        payment_method_id: payment_method_id,
+        cards_purchased: codes.map((c: any) => ({
+          denomination: c.denomination,
+          cost: stack.cards.find((sc: any) => sc.denomination === c.denomination)?.price_per_card || 0,
+          code_last4: c.code.slice(-4),
+        })),
+      }).eq('id', transactionId);
 
-      if (existing) {
-        await supabase.from('stashly_balances')
-          .update({ balance: existing.balance + stack.residual_balance, updated_at: new Date().toISOString() })
-          .eq('id', existing.id);
-      } else {
-        await supabase.from('stashly_balances').insert({
-          user_id: user.id,
-          retailer_id: retailer_id,
-          balance: stack.residual_balance,
-        });
+      // Update Stashly balance for residual
+      if (stack.residual_balance > 0) {
+        const { data: existing } = await supabase
+          .from('stashly_balances')
+          .select('id, balance')
+          .eq('user_id', user.id)
+          .eq('retailer_id', retailer_id)
+          .single();
+
+        if (existing) {
+          await supabase.from('stashly_balances')
+            .update({ balance: existing.balance + stack.residual_balance, updated_at: new Date().toISOString() })
+            .eq('id', existing.id);
+        } else {
+          await supabase.from('stashly_balances').insert({
+            user_id: user.id,
+            retailer_id: retailer_id,
+            balance: stack.residual_balance,
+          });
+        }
       }
+
+      return NextResponse.json({
+        transaction_id: transactionId,
+        codes,
+        residual_balance: stack.residual_balance,
+        total_paid: stack.total_paid,
+        total_savings: stack.savings,
+      });
+    } catch (postChargeErr) {
+      console.error('Post-charge processing failed, webhook will reconcile:', postChargeErr);
+      return NextResponse.json({
+        transaction_id: transactionId,
+        codes: [],
+        residual_balance: 0,
+        total_paid: stack.total_paid,
+        total_savings: stack.savings,
+        pending: true,
+      }, { status: 202 });
     }
 
-    return NextResponse.json({
-      transaction_id: transactionId,
-      codes,
-      residual_balance: stack.residual_balance,
-      total_paid: stack.total_paid,
-      total_savings: stack.savings,
-    });
-
   } catch (err) {
+    // Only reaches here if chargeCustomer() itself threw
     console.error('Payment failed:', err);
     await unreserveCards(transactionId);
     await supabase.from('transactions').update({ status: 'failed' }).eq('id', transactionId);

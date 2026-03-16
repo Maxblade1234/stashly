@@ -5,10 +5,12 @@ import { loadStripe, type Stripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Loader2 } from 'lucide-react';
 
+let cachedKey: string | null = null;
 let stripePromise: Promise<Stripe | null> | null = null;
 
 function getStripePromise(publishableKey: string) {
-  if (!stripePromise) {
+  if (!stripePromise || cachedKey !== publishableKey) {
+    cachedKey = publishableKey;
     stripePromise = loadStripe(publishableKey);
   }
   return stripePromise;
