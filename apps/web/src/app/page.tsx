@@ -195,6 +195,12 @@ export default function LandingPage() {
       {/* ========== HOW IT WORKS ========== */}
       <HowItWorks activeStep={activeStep} setActiveStep={setActiveStep} />
 
+      {/* ========== MID-PAGE CTA ========== */}
+      <MidPageCta />
+
+      {/* ========== SAVINGS CALCULATOR ========== */}
+      <SavingsCalculator />
+
       {/* ========== SOCIAL PROOF ========== */}
       <SocialProof />
 
@@ -812,7 +818,313 @@ function HowItWorks({
 }
 
 /* ============================================================
-   Section 6: Social Proof
+   Section 6: Mid-Page CTA (Lifestyle photo + floating cards)
+   ============================================================ */
+function MidPageCta() {
+  return (
+    <section
+      id="mid-cta"
+      className="reveal"
+      style={{
+        padding: 'clamp(80px, 10vw, 160px) 0',
+        backgroundColor: '#FDFAF6',
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Centered header */}
+        <div className="text-center mb-12 md:mb-16">
+          <h2
+            className="font-semibold mb-5"
+            style={{
+              fontSize: 'clamp(32px, 4vw, 52px)',
+              letterSpacing: '-0.02em',
+              color: '#1A1A1A',
+              lineHeight: 1.1,
+            }}
+          >
+            Ditch the full price and
+            <br />
+            reclaim your savings.
+          </h2>
+          <p
+            style={{
+              fontSize: '18px',
+              color: '#6B6B6B',
+              maxWidth: '560px',
+              margin: '0 auto',
+              lineHeight: 1.6,
+            }}
+          >
+            Smart decisions need smarter tools. That&apos;s why thousands of
+            shoppers rely on Stashly to keep more money in their pocket.
+          </p>
+        </div>
+
+        {/* Lifestyle photo with floating notification cards */}
+        <div className="relative rounded-2xl overflow-hidden">
+          <div
+            className="w-full aspect-[16/9] md:aspect-[2.2/1] bg-cover bg-center"
+            style={{
+              backgroundImage:
+                'url(https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80)',
+            }}
+          />
+
+          {/* Floating notification card — bottom right */}
+          <div
+            className="absolute bottom-6 right-6 md:bottom-10 md:right-10 bg-white rounded-xl shadow-lg px-5 py-4 flex items-center gap-3"
+            style={{ animation: 'float 6s ease-in-out infinite' }}
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+              style={{ backgroundColor: '#C8E640', color: '#1A1A1A' }}
+            >
+              S
+            </div>
+            <div>
+              <p className="text-xs font-semibold" style={{ color: '#1A1A1A' }}>
+                Stashly
+              </p>
+              <p className="text-xs" style={{ color: '#6B6B6B' }}>
+                $9.25 saved on this order
+              </p>
+            </div>
+          </div>
+
+          {/* Floating notification card — bottom center-left */}
+          <div
+            className="absolute bottom-16 left-6 md:bottom-20 md:left-10 bg-white rounded-xl shadow-lg px-5 py-4 flex items-center gap-3 hidden md:flex"
+            style={{ animation: 'float 6s ease-in-out infinite 1.5s' }}
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+              style={{ backgroundColor: '#2D7A2F' }}
+            >
+              ✓
+            </div>
+            <div>
+              <p className="text-xs font-semibold" style={{ color: '#1A1A1A' }}>
+                Gift card applied
+              </p>
+              <p className="text-xs" style={{ color: '#6B6B6B' }}>
+                Apple $50 → $43.50
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   Section 7: Savings Calculator / Comparison
+   ============================================================ */
+function SavingsCalculator() {
+  const [cartTotal, setCartTotal] = useState(100);
+  const discountPercent = 12;
+  const savings = (cartTotal * discountPercent) / 100;
+  const stashlyPrice = cartTotal - savings;
+
+  const comparisons = [
+    { name: 'Stashly', rate: discountPercent, amount: savings, color: '#C8E640' },
+    { name: 'Competitor A', rate: 5, amount: (cartTotal * 5) / 100, color: '#1A1A1A' },
+    { name: 'Competitor B', rate: 3, amount: (cartTotal * 3) / 100, color: '#9A9A9A' },
+    { name: 'Retail Price', rate: 0, amount: 0, color: '#E8E3DB' },
+  ];
+
+  return (
+    <section
+      id="savings-calc"
+      className="reveal"
+      style={{
+        padding: 'clamp(80px, 10vw, 160px) 0',
+        backgroundColor: '#F2EDE5',
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+          {/* Left: Headline + Input */}
+          <div>
+            <h2
+              className="font-semibold mb-5"
+              style={{
+                fontSize: 'clamp(28px, 3.5vw, 44px)',
+                letterSpacing: '-0.02em',
+                color: '#1A1A1A',
+                lineHeight: 1.1,
+              }}
+            >
+              Find out what your savings can do
+            </h2>
+            <p
+              className="mb-10"
+              style={{
+                fontSize: '17px',
+                color: '#6B6B6B',
+                lineHeight: 1.7,
+                maxWidth: '440px',
+              }}
+            >
+              See how much more you could be saving with Stashly vs. paying full
+              price. Adjust your cart total below.
+            </p>
+
+            {/* Cart total input widget */}
+            <div
+              className="rounded-2xl p-6 md:p-8"
+              style={{ backgroundColor: '#FFFFFF' }}
+            >
+              <p
+                className="text-xs font-medium uppercase tracking-wider mb-3"
+                style={{ color: '#9A9A9A', letterSpacing: '0.05em' }}
+              >
+                Your cart total
+              </p>
+              <p
+                className="text-4xl font-bold mb-6"
+                style={{ color: '#1A1A1A', letterSpacing: '-0.02em' }}
+              >
+                ${cartTotal}
+              </p>
+              <input
+                type="range"
+                min={25}
+                max={500}
+                step={25}
+                value={cartTotal}
+                onChange={(e) => setCartTotal(Number(e.target.value))}
+                className="w-full accent-[#C8E640]"
+                style={{ accentColor: '#C8E640' }}
+              />
+              <div
+                className="flex justify-between mt-2 text-xs"
+                style={{ color: '#9A9A9A' }}
+              >
+                <span>$25</span>
+                <span>$500</span>
+              </div>
+            </div>
+
+            <Link
+              href="/signup"
+              className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-base transition-all mt-8"
+              style={{
+                backgroundColor: '#C8E640',
+                color: '#1A1A1A',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#B8D636';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#C8E640';
+              }}
+            >
+              Get Started Free
+              <ArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
+          </div>
+
+          {/* Right: Comparison bar chart */}
+          <div className="mt-2">
+            <p
+              className="text-xs font-medium uppercase tracking-wider mb-8"
+              style={{ color: '#9A9A9A', letterSpacing: '0.05em' }}
+            >
+              Savings comparison
+            </p>
+
+            <div className="space-y-6">
+              {comparisons.map((c) => {
+                const barWidth = c.rate > 0 ? Math.max((c.rate / discountPercent) * 100, 8) : 4;
+                return (
+                  <div key={c.name}>
+                    <div className="flex justify-between items-baseline mb-2">
+                      <div>
+                        <span
+                          className="text-sm font-medium"
+                          style={{
+                            color: c.name === 'Stashly' ? '#1A1A1A' : '#6B6B6B',
+                          }}
+                        >
+                          {c.name}
+                        </span>
+                        <span
+                          className="text-xs ml-2"
+                          style={{ color: '#9A9A9A' }}
+                        >
+                          {c.rate}%
+                        </span>
+                      </div>
+                      <span
+                        className="text-sm font-semibold"
+                        style={{
+                          color: c.name === 'Stashly' ? '#2D7A2F' : '#1A1A1A',
+                        }}
+                      >
+                        ${c.amount.toFixed(2)}
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
+                    >
+                      <div
+                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        style={{
+                          width: `${barWidth}%`,
+                          backgroundColor: c.color,
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Summary card */}
+            <div
+              className="mt-10 rounded-xl p-5 flex items-center justify-between"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E8E3DB',
+              }}
+            >
+              <div>
+                <p className="text-xs" style={{ color: '#9A9A9A' }}>
+                  You pay with Stashly
+                </p>
+                <p
+                  className="text-2xl font-bold mt-0.5"
+                  style={{ color: '#1A1A1A', letterSpacing: '-0.02em' }}
+                >
+                  ${stashlyPrice.toFixed(2)}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs" style={{ color: '#9A9A9A' }}>
+                  You save
+                </p>
+                <p
+                  className="text-2xl font-bold mt-0.5"
+                  style={{ color: '#2D7A2F', letterSpacing: '-0.02em' }}
+                >
+                  ${savings.toFixed(2)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   Section 8: Social Proof
    ============================================================ */
 function SocialProof() {
   return (
