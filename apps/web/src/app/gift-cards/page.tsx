@@ -22,7 +22,7 @@ export default function GiftCardsPage() {
     fetch('/api/retailers')
       .then(res => res.json())
       .then(data => {
-        setRetailers(data.retailers || []);
+        setRetailers(Array.isArray(data) ? data : data.retailers || []);
         setLoading(false);
       })
       .catch((err) => {

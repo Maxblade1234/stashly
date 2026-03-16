@@ -53,5 +53,5 @@ export async function POST(req: NextRequest) {
     spentTodayUsd: spentToday,
   });
 
-  return NextResponse.json(stack);
+  return NextResponse.json({ stack });
 }

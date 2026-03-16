@@ -9,7 +9,7 @@ import { purchaseSchema } from '@/lib/validations';
 import { randomUUID } from 'node:crypto';
 
 const MAX_PURCHASES_PER_HOUR = 3;
-const isDemoMode = process.env.STASHLY_MODE === 'demo';
+const isDemoMode = process.env.NEXT_PUBLIC_STASHLY_MODE === 'demo';
 
 async function updateStashlyBalance(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -102,9 +102,12 @@ export async function POST(req: NextRequest) {
     quantity: c.quantity,
   }));
 
-  const reservation = await reserveCards(retailer.name, cardsToReserve, transactionId);
-  if (!reservation.success) {
-    return NextResponse.json({ error: 'Cards no longer available' }, { status: 409 });
+  // Skip inventory reservation in demo mode
+  if (!isDemoMode) {
+    const reservation = await reserveCards(retailer.name, cardsToReserve, transactionId);
+    if (!reservation.success) {
+      return NextResponse.json({ error: 'Cards no longer available' }, { status: 409 });
+    }
   }
 
   await supabase.from('transactions').insert({
