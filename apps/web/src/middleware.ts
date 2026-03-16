@@ -29,6 +29,11 @@ const protectedPaths = ['/dashboard', '/gift-cards', '/history', '/settings', '/
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Webhook endpoints authenticated by signature, not session/rate-limit
+  if (pathname.startsWith('/api/webhooks/')) {
+    return NextResponse.next();
+  }
+
   // Rate limit API routes
   if (pathname.startsWith('/api/')) {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
