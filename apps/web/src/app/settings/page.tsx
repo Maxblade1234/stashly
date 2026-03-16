@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Loader2, LogOut, AlertTriangle } from 'lucide-react';
+import PaymentMethodManager from '@/components/PaymentMethodManager';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -86,6 +87,11 @@ export default function SettingsPage() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Payment methods */}
+      <div className="mb-6">
+        <PaymentMethodManager />
       </div>
 
       {/* Sign out */}
