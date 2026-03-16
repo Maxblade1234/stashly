@@ -100,7 +100,7 @@ export interface StackRequest {
 export interface PurchaseRequest {
   retailer_id: string;
   cart_total: number;
-  payment_token?: string;
+  payment_method_id?: string;
 }
 
 export interface PurchaseResponse {
@@ -140,4 +140,9 @@ export interface PaymentMethodInfo {
   last4: string;
   brand: string;
   isDefault: boolean;
+}
+
+export interface PaymentConfig {
+  publishableKey: string;
+  processor: PaymentProcessor;
 }
