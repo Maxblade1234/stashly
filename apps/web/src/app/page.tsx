@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Plus, X } from 'lucide-react';
 
@@ -8,16 +9,16 @@ import { ArrowRight, Plus, X } from 'lucide-react';
    Data
    ============================================================ */
 const retailers = [
-  'Apple',
-  'Chipotle',
-  'eBay',
-  'Dominos',
-  'Fanatics',
-  'Riot Games',
-  'NFL Shop',
-  'Jersey Mikes',
-  'New Era',
-  'Off Season',
+  { name: 'Apple', domain: 'apple.com' },
+  { name: 'Chipotle', domain: 'chipotle.com' },
+  { name: 'eBay', domain: 'ebay.com' },
+  { name: 'Dominos', domain: 'dominos.com' },
+  { name: 'Fanatics', domain: 'fanatics.com' },
+  { name: 'Riot Games', domain: 'riotgames.com' },
+  { name: 'NFL Shop', domain: 'nflshop.com' },
+  { name: 'Jersey Mikes', domain: 'jerseymikes.com' },
+  { name: 'New Era', domain: 'neweracap.com' },
+  { name: 'Off Season', domain: 'offseason.com' },
 ];
 
 const howItWorksSteps = [
@@ -322,17 +323,21 @@ function HeroSection() {
             Supported retailers
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-            {['Apple', 'Chipotle', 'eBay', 'Dominos', 'Fanatics'].map(
-              (name) => (
-                <span
-                  key={name}
-                  className="text-sm font-medium"
-                  style={{ color: 'rgba(255, 255, 255, 0.35)' }}
-                >
-                  {name}
-                </span>
-              )
-            )}
+            {retailers.slice(0, 5).map((r) => (
+              <Image
+                key={r.name}
+                src={`https://logo.clearbit.com/${r.domain}`}
+                alt={r.name}
+                width={80}
+                height={24}
+                className="h-5 w-auto object-contain"
+                style={{
+                  filter: 'grayscale(100%) brightness(2)',
+                  opacity: 0.35,
+                }}
+                unoptimized
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -594,14 +599,25 @@ function LogoTicker() {
       <div className="relative overflow-hidden">
         <div className="ticker-track">
           {/* Double the items for seamless loop */}
-          {[...retailers, ...retailers].map((name, i) => (
-            <span
+          {[...retailers, ...retailers].map((r, i) => (
+            <div
               key={i}
-              className="inline-block px-10 text-2xl font-medium whitespace-nowrap"
-              style={{ color: '#9A9A9A' }}
+              className="inline-flex items-center justify-center px-10 shrink-0"
+              style={{ minWidth: '140px' }}
             >
-              {name}
-            </span>
+              <Image
+                src={`https://logo.clearbit.com/${r.domain}`}
+                alt={r.name}
+                width={100}
+                height={32}
+                className="h-7 w-auto object-contain"
+                style={{
+                  filter: 'grayscale(100%)',
+                  opacity: 0.4,
+                }}
+                unoptimized
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -1438,12 +1454,14 @@ function Footer() {
           className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8"
           style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
         >
-          <span
-            className="text-lg font-semibold tracking-tight"
-            style={{ color: 'rgba(255,255,255,0.6)' }}
-          >
-            stashly
-          </span>
+          <Image
+            src="/images/stashly-logo.svg"
+            alt="Stashly"
+            width={100}
+            height={28}
+            className="h-6 w-auto invert brightness-200"
+            style={{ opacity: 0.6 }}
+          />
           <p
             className="text-xs"
             style={{ color: 'rgba(255,255,255,0.25)' }}

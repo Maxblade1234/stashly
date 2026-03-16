@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import Image from 'next/image';
 import { Menu, X, LogOut, LayoutDashboard, CreditCard } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
@@ -69,12 +70,14 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span
-            className="text-lg font-semibold tracking-tight"
+          <Image
+            src="/images/stashly-logo.svg"
+            alt="Stashly"
+            width={120}
+            height={32}
+            className="h-7 w-auto"
             style={{ color: '#1A1A1A' }}
-          >
-            stashly
-          </span>
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -208,12 +211,13 @@ function DarkNav({
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <span
-            className="text-lg tracking-tight"
-            style={{ fontWeight: 600, color: '#FFFFFF' }}
-          >
-            stashly
-          </span>
+          <Image
+            src="/images/stashly-logo.svg"
+            alt="Stashly"
+            width={120}
+            height={32}
+            className="h-7 w-auto invert brightness-200"
+          />
         </Link>
 
         {/* Desktop center links */}
