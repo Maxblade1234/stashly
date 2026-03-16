@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPaymentService, PaymentError } from '@/services/payment';
+import { unreserveCards } from '@/lib/inventory-client';
 import { createClient as createAdminClient, SupabaseClient } from '@supabase/supabase-js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,23 +35,18 @@ export async function POST(req: NextRequest) {
 
   const supabase = getAdminClient();
 
-  // Idempotency: skip if already processed
-  const { data: existing } = await supabase
+  // Idempotency: insert event, skip if already exists (atomic)
+  const { data: inserted } = await supabase
     .from('webhook_events')
-    .select('id')
-    .eq('id', event.id)
-    .single();
+    .upsert(
+      { id: event.id, type: event.type, processor: 'stripe', data: event.data },
+      { onConflict: 'id', ignoreDuplicates: true }
+    )
+    .select('id');
 
-  if (existing) {
+  if (!inserted || inserted.length === 0) {
     return NextResponse.json({ received: true, duplicate: true });
   }
-
-  await supabase.from('webhook_events').insert({
-    id: event.id,
-    type: event.type,
-    processor: 'stripe',
-    data: event.data,
-  });
 
   try {
     switch (event.type) {
@@ -113,15 +109,7 @@ async function handlePaymentFailed(
   }).eq('id', transactionId);
 
   try {
-    const INVENTORY_URL = process.env.INVENTORY_SERVICE_URL || 'http://localhost:3001';
-    await fetch(`${INVENTORY_URL}/cards/unreserve`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-service-key': process.env.INVENTORY_SERVICE_API_KEY || '',
-      },
-      body: JSON.stringify({ transaction_id: transactionId }),
-    });
+    await unreserveCards(transactionId);
   } catch (err) {
     console.error('Failed to release reservation for', transactionId, err);
   }

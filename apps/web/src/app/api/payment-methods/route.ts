@@ -82,6 +82,11 @@ export async function POST(req: NextRequest) {
       tokenizedCard: token,
     });
 
+    // Unset existing defaults before making new card the default
+    await supabase.from('payment_methods')
+      .update({ is_default: false })
+      .eq('user_id', user.id);
+
     // Store in our DB
     await supabase.from('payment_methods').insert({
       user_id: user.id,

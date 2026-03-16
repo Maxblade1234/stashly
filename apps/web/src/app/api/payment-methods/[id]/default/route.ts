@@ -24,15 +24,16 @@ export async function PUT(
     return NextResponse.json({ error: 'Payment method not found' }, { status: 404 });
   }
 
-  // Unset all defaults, then set the new one
-  await supabase.from('payment_methods')
-    .update({ is_default: false })
-    .eq('user_id', user.id);
-
+  // Set new default first (safer ordering — crash leaves 2 defaults, not 0)
   await supabase.from('payment_methods')
     .update({ is_default: true })
     .eq('processor_method_id', id)
     .eq('user_id', user.id);
+
+  await supabase.from('payment_methods')
+    .update({ is_default: false })
+    .eq('user_id', user.id)
+    .neq('processor_method_id', id);
 
   return NextResponse.json({ success: true });
 }
