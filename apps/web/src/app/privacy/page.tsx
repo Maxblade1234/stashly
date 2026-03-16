@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy — Stashly',
+  description: 'How Stashly collects, uses, and protects your data.',
+};
+
 export default function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">

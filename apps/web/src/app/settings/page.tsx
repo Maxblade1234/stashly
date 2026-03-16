@@ -120,10 +120,20 @@ export default function SettingsPage() {
           These actions are irreversible. Proceed with caution.
         </p>
         <div className="space-y-2">
-          <button className="w-full px-4 py-2 text-sm text-red-600 border border-red-200 rounded-xl hover:bg-red-100 transition-colors">
+          <button
+            onClick={() => alert('Data export coming soon')}
+            className="w-full px-4 py-2 text-sm text-red-600 border border-red-200 rounded-xl hover:bg-red-100 transition-colors"
+          >
             Export My Data
           </button>
-          <button className="w-full px-4 py-2 text-sm text-red-700 font-medium border border-red-300 rounded-xl hover:bg-red-200 transition-colors">
+          <button
+            onClick={() => {
+              if (window.confirm('Are you sure you want to delete your account? This action is irreversible.')) {
+                alert('Account deletion coming soon');
+              }
+            }}
+            className="w-full px-4 py-2 text-sm text-red-700 font-medium border border-red-300 rounded-xl hover:bg-red-200 transition-colors"
+          >
             Delete Account
           </button>
         </div>

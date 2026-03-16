@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter, IBM_Plex_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -34,7 +35,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${plusJakarta.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-white`}>
         <Navbar />
-        <main className="pt-16">{children}</main>
+        <main className="pt-16">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
       </body>
     </html>
   );

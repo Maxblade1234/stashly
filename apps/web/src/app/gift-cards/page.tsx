@@ -15,6 +15,7 @@ interface Retailer {
 export default function GiftCardsPage() {
   const [retailers, setRetailers] = useState<Retailer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -24,7 +25,10 @@ export default function GiftCardsPage() {
         setRetailers(data.retailers || []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : 'Failed to load retailers');
+        setLoading(false);
+      });
   }, []);
 
   const filtered = retailers.filter(r =>
@@ -55,7 +59,17 @@ export default function GiftCardsPage() {
         />
       </div>
 
-      {loading ? (
+      {error ? (
+        <div className="text-center py-20">
+          <p className="text-sm text-red-600 mb-2">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            Try again
+          </button>
+        </div>
+      ) : loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 size={24} className="animate-spin text-gray-400" />
         </div>
