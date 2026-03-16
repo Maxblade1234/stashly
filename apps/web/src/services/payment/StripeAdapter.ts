@@ -64,7 +64,10 @@ export class StripeAdapter implements PaymentService {
     const refund = await this.stripe.refunds.create({
       payment_intent: input.transactionId, amount: input.amount,
     });
-    return { refundId: refund.id, status: refund.status === 'succeeded' ? 'succeeded' : 'pending', amount: refund.amount };
+    const refundStatus = refund.status === 'succeeded' ? 'succeeded' as const
+      : refund.status === 'failed' || refund.status === 'canceled' ? 'failed' as const
+      : 'pending' as const;
+    return { refundId: refund.id, status: refundStatus, amount: refund.amount };
   }
 
   async getTransaction(transactionId: string): Promise<TransactionInfo> {
