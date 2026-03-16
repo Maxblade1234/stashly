@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service — Stashly',
+  description: 'Terms and conditions for using Stashly.',
+};
+
 export default function TermsPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">

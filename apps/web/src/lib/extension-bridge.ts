@@ -11,6 +11,12 @@ export function sendCodesToExtension(
 ) {
   if (typeof window === 'undefined') return;
 
+  // Wildcard origin ('*') is intentional here. The Chrome extension's content
+  // script listens via window.addEventListener('message', ...) which requires
+  // same-window messaging. The extension validates the message by checking
+  // event.data.type === 'STASHLY_CODES_READY', so only Stashly messages are
+  // acted upon. A restrictive targetOrigin would break this since the web app
+  // origin differs from the retailer checkout page where the extension runs.
   window.postMessage(
     {
       type: 'STASHLY_CODES_READY',
