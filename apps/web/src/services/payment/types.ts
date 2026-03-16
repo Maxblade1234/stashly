@@ -30,6 +30,7 @@ export interface ChargeInput {
   amount: number;
   currency: string;
   metadata?: Record<string, string>;
+  idempotencyKey?: string;
 }
 
 export interface ChargeResult {
@@ -67,4 +68,17 @@ export interface WebhookEvent {
   id: string;
   type: string;
   data: Record<string, unknown>;
+}
+
+/** Wraps processor errors with a consistent shape for callers */
+export class PaymentError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly processorCode?: string,
+    public readonly isRetryable: boolean = false,
+  ) {
+    super(message);
+    this.name = 'PaymentError';
+  }
 }
