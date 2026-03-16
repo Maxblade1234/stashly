@@ -7,3 +7,4 @@ dist/
 *.log
 inventory.db
 .worktrees/
+.DS_Store
