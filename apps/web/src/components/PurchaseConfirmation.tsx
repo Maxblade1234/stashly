@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Copy, PartyPopper } from 'lucide-react';
 import type { DeliveredCode } from '@stashly/shared';
+import { sendCodesToExtension } from '@/lib/extension-bridge';
 
 interface PurchaseConfirmationProps {
   codes: DeliveredCode[];
   totalSavings: number;
   residualBalance: number;
   retailerName: string;
+  retailerId?: string;
 }
 
 export default function PurchaseConfirmation({
@@ -16,16 +18,21 @@ export default function PurchaseConfirmation({
   totalSavings,
   residualBalance,
   retailerName,
+  retailerId,
 }: PurchaseConfirmationProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  // Send all codes to extension on mount
+  useEffect(() => {
+    if (codes.length > 0 && retailerId) {
+      sendCodesToExtension(codes, retailerName, retailerId);
+    }
+  }, [codes, retailerName, retailerId]);
 
   const handleCopy = (code: string, index: number) => {
     navigator.clipboard.writeText(code);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
-
-    // Notify extension via postMessage
-    window.postMessage({ type: 'STASHLY_CODE_DELIVERED', code, retailer: retailerName }, '*');
   };
 
   return (
