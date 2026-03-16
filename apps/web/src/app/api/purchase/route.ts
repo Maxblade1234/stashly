@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getAvailability, reserveCards } from '@/lib/inventory-client';
+import { getAvailability, reserveCards, releaseCards, unreserveCards } from '@/lib/inventory-client';
+import { createPaymentService, PaymentError } from '@/services/payment';
 import { calculateOptimalStack } from '@/lib/stacking';
 import { rateLimit } from '@/lib/rate-limit';
 import { randomUUID } from 'node:crypto';
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
   }
 
-  const { retailer_id, cart_total } = await req.json();
+  const { retailer_id, cart_total, payment_method_id } = await req.json();
   if (!retailer_id || !cart_total || cart_total <= 0) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
@@ -136,11 +137,135 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Live mode: return transaction ID for payment page
-  return NextResponse.json({
-    transaction_id: transactionId,
-    total_paid: stack.total_paid,
-    total_savings: stack.savings,
-    payment_required: true,
-  });
+  // Live mode: charge the user
+  if (!payment_method_id || typeof payment_method_id !== 'string') {
+    await unreserveCards(transactionId);
+    return NextResponse.json({ error: 'Payment method required' }, { status: 400 });
+  }
+
+  // Verify payment method ownership
+  const { data: method } = await supabase
+    .from('payment_methods')
+    .select('processor_method_id')
+    .eq('user_id', user.id)
+    .eq('processor_method_id', payment_method_id)
+    .single();
+
+  if (!method) {
+    await unreserveCards(transactionId);
+    return NextResponse.json({ error: 'Invalid payment method' }, { status: 403 });
+  }
+
+  // Get or create processor customer
+  let { data: profile } = await supabase
+    .from('profiles')
+    .select('processor_customer_id')
+    .eq('id', user.id)
+    .single();
+
+  if (!profile?.processor_customer_id) {
+    const paymentService = createPaymentService();
+    try {
+      const customer = await paymentService.createCustomer({
+        email: user.email || '',
+        metadata: { userId: user.id },
+      });
+      await supabase.from('profiles').update({
+        payment_processor: process.env.PAYMENT_PROCESSOR || 'stripe',
+        processor_customer_id: customer.customerId,
+      }).eq('id', user.id);
+      profile = { processor_customer_id: customer.customerId };
+    } catch {
+      await unreserveCards(transactionId);
+      return NextResponse.json({ error: 'Failed to create payment profile' }, { status: 502 });
+    }
+  }
+
+  // Charge the customer
+  const amountCents = Math.round(stack.total_paid * 100);
+  try {
+    const paymentService = createPaymentService();
+    const charge = await paymentService.chargeCustomer({
+      customerId: profile.processor_customer_id!,
+      paymentMethodId: payment_method_id,
+      amount: amountCents,
+      currency: 'usd',
+      idempotencyKey: transactionId,
+      metadata: {
+        transactionId,
+        retailerId: retailer_id,
+        userId: user.id,
+      },
+    });
+
+    if (charge.status !== 'succeeded') {
+      await unreserveCards(transactionId);
+      await supabase.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
+      return NextResponse.json({ error: 'Payment not completed. Please try again.' }, { status: 402 });
+    }
+
+    // Payment succeeded — mark cards as sold and get codes
+    const soldCards = await releaseCards(transactionId);
+    const codes = (soldCards.cards || []).map((c: any) => ({
+      denomination: c.denomination,
+      code: c.code,
+      pin: c.pin || null,
+    }));
+
+    // Update transaction record
+    await supabase.from('transactions').update({
+      status: 'completed',
+      processor: process.env.PAYMENT_PROCESSOR || 'stripe',
+      processor_transaction_id: charge.processorRef,
+      payment_method_id: payment_method_id,
+      cards_purchased: codes.map((c: any) => ({
+        denomination: c.denomination,
+        cost: stack.cards.find((sc: any) => sc.denomination === c.denomination)?.price_per_card || 0,
+        code_last4: c.code.slice(-4),
+      })),
+    }).eq('id', transactionId);
+
+    // Update Stashly balance for residual
+    if (stack.residual_balance > 0) {
+      const { data: existing } = await supabase
+        .from('stashly_balances')
+        .select('id, balance')
+        .eq('user_id', user.id)
+        .eq('retailer_id', retailer_id)
+        .single();
+
+      if (existing) {
+        await supabase.from('stashly_balances')
+          .update({ balance: existing.balance + stack.residual_balance, updated_at: new Date().toISOString() })
+          .eq('id', existing.id);
+      } else {
+        await supabase.from('stashly_balances').insert({
+          user_id: user.id,
+          retailer_id: retailer_id,
+          balance: stack.residual_balance,
+        });
+      }
+    }
+
+    return NextResponse.json({
+      transaction_id: transactionId,
+      codes,
+      residual_balance: stack.residual_balance,
+      total_paid: stack.total_paid,
+      total_savings: stack.savings,
+    });
+
+  } catch (err) {
+    console.error('Payment failed:', err);
+    await unreserveCards(transactionId);
+    await supabase.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
+
+    if (err instanceof PaymentError) {
+      return NextResponse.json(
+        { error: err.isRetryable ? 'Payment failed. Please try again.' : 'Payment declined.' },
+        { status: 402 }
+      );
+    }
+    return NextResponse.json({ error: 'Payment processing error' }, { status: 500 });
+  }
 }
