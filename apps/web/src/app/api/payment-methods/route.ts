@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { createPaymentService, PaymentError } from '@/services/payment';
+import { savePaymentMethodSchema } from '@/lib/validations';
 
 export async function GET() {
   const supabase = await createClient();
@@ -38,10 +40,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { token } = await req.json();
-  if (!token || typeof token !== 'string') {
-    return NextResponse.json({ error: 'Missing token' }, { status: 400 });
+  let body;
+  try {
+    body = savePaymentMethodSchema.parse(await req.json());
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: err.issues[0]?.message || 'Invalid request' }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
+  const { token } = body;
 
   const paymentService = createPaymentService();
   const processor = process.env.PAYMENT_PROCESSOR || 'stripe';

@@ -1,13 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { getAvailability, reserveCards, releaseCards, unreserveCards } from '@/lib/inventory-client';
 import { createPaymentService, PaymentError } from '@/services/payment';
 import { calculateOptimalStack } from '@/lib/stacking';
 import { rateLimit } from '@/lib/rate-limit';
+import { purchaseSchema } from '@/lib/validations';
 import { randomUUID } from 'node:crypto';
 
 const MAX_PURCHASES_PER_HOUR = 3;
 const isDemoMode = process.env.STASHLY_MODE === 'demo';
+
+async function updateStashlyBalance(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  retailerId: string,
+  amount: number
+) {
+  if (amount <= 0) return;
+
+  const { data: existing } = await supabase
+    .from('stashly_balances')
+    .select('id, balance')
+    .eq('user_id', userId)
+    .eq('retailer_id', retailerId)
+    .single();
+
+  if (existing) {
+    await supabase.from('stashly_balances')
+      .update({ balance: existing.balance + amount, updated_at: new Date().toISOString() })
+      .eq('id', existing.id);
+  } else {
+    await supabase.from('stashly_balances').insert({
+      user_id: userId,
+      retailer_id: retailerId,
+      balance: amount,
+    });
+  }
+}
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
@@ -21,10 +51,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
   }
 
-  const { retailer_id, cart_total, payment_method_id } = await req.json();
-  if (!retailer_id || !cart_total || cart_total <= 0) {
-    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  let body;
+  try {
+    body = purchaseSchema.parse(await req.json());
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: err.issues[0]?.message || 'Invalid request' }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
+  const { retailer_id, cart_total, payment_method_id } = body;
 
   const { data: retailer } = await supabase
     .from('retailers')
@@ -107,26 +143,7 @@ export async function POST(req: NextRequest) {
     }).eq('id', transactionId);
 
     // Update Stashly balance
-    if (stack.residual_balance > 0) {
-      const { data: existing } = await supabase
-        .from('stashly_balances')
-        .select('id, balance')
-        .eq('user_id', user.id)
-        .eq('retailer_id', retailer_id)
-        .single();
-
-      if (existing) {
-        await supabase.from('stashly_balances')
-          .update({ balance: existing.balance + stack.residual_balance, updated_at: new Date().toISOString() })
-          .eq('id', existing.id);
-      } else {
-        await supabase.from('stashly_balances').insert({
-          user_id: user.id,
-          retailer_id: retailer_id,
-          balance: stack.residual_balance,
-        });
-      }
-    }
+    await updateStashlyBalance(supabase, user.id, retailer_id, stack.residual_balance);
 
     return NextResponse.json({
       transaction_id: transactionId,
@@ -227,26 +244,7 @@ export async function POST(req: NextRequest) {
       }).eq('id', transactionId);
 
       // Update Stashly balance for residual
-      if (stack.residual_balance > 0) {
-        const { data: existing } = await supabase
-          .from('stashly_balances')
-          .select('id, balance')
-          .eq('user_id', user.id)
-          .eq('retailer_id', retailer_id)
-          .single();
-
-        if (existing) {
-          await supabase.from('stashly_balances')
-            .update({ balance: existing.balance + stack.residual_balance, updated_at: new Date().toISOString() })
-            .eq('id', existing.id);
-        } else {
-          await supabase.from('stashly_balances').insert({
-            user_id: user.id,
-            retailer_id: retailer_id,
-            balance: stack.residual_balance,
-          });
-        }
-      }
+      await updateStashlyBalance(supabase, user.id, retailer_id, stack.residual_balance);
 
       return NextResponse.json({
         transaction_id: transactionId,
