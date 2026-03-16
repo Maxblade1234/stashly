@@ -1,0 +1,19 @@
+/* Stashly Overlay Styles — injected into shadow DOM */
+/* This file serves as a reference; actual styles are embedded in overlay.js for shadow DOM isolation */
+
+.stashly-card {
+  width: 320px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.stashly-card.stashly-visible {
+  transform: translateY(0);
+  opacity: 1;
+}

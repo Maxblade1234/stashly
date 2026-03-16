@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=360">
+  <link rel="stylesheet" href="popup.css">
+  <title>Stashly</title>
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <img src="../icons/icon48.png" alt="Stashly" class="popup-logo">
+      <span class="popup-wordmark">Stashly</span>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loading" class="popup-section popup-center">
+      <div class="popup-spinner"></div>
+    </div>
+
+    <!-- Logged out state -->
+    <div id="logged-out" class="popup-section" style="display: none;">
+      <div class="popup-center">
+        <p class="popup-title">Save money at checkout</p>
+        <p class="popup-subtitle">Log in to see your savings and balances</p>
+        <button id="login-btn" class="popup-btn popup-btn-primary">Log In</button>
+        <button id="signup-btn" class="popup-btn popup-btn-secondary">Create Account</button>
+      </div>
+    </div>
+
+    <!-- Logged in state -->
+    <div id="logged-in" class="popup-section" style="display: none;">
+      <div class="popup-user-info">
+        <span id="user-email" class="popup-email"></span>
+      </div>
+
+      <div class="popup-stat-card">
+        <span class="popup-stat-label">Total Saved</span>
+        <span id="total-savings" class="popup-stat-value">$0.00</span>
+      </div>
+
+      <div id="balances-section" style="display: none;">
+        <p class="popup-section-title">Stashly Balances</p>
+        <div id="balances-list" class="popup-balances"></div>
+      </div>
+
+      <div class="popup-actions">
+        <button id="dashboard-btn" class="popup-btn popup-btn-primary">Open Dashboard</button>
+        <button id="gift-cards-btn" class="popup-btn popup-btn-secondary">Browse Gift Cards</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <span>Stashly v0.1.0</span>
+    </div>
+  </div>
+
+  <script src="../utils/config.js"></script>
+  <script src="../utils/api.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

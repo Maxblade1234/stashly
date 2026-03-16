@@ -1,18 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "Stashly",
+  "name": "Stashly — Save at Checkout",
   "version": "0.1.0",
-  "description": "Save money at checkout with discounted gift cards",
-  "permissions": ["activeTab", "storage", "cookies"],
-  "host_permissions": ["https://*.stashly.com/*"],
+  "description": "Save up to 15% at checkout with discounted gift cards. Works at Apple, Chipotle, eBay, and more.",
+  "permissions": ["activeTab", "storage", "cookies", "alarms"],
+  "host_permissions": [
+    "https://*.stashly.com/*",
+    "http://localhost:3000/*",
+    "https://*.apple.com/*",
+    "https://*.chipotle.com/*",
+    "https://*.dominos.com/*",
+    "https://*.ebay.com/*",
+    "https://*.neweracap.com/*",
+    "https://*.nflshop.com/*",
+    "https://*.jerseymikes.com/*",
+    "https://*.fanatics.com/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/detector.js"],
+      "js": ["utils/config.js", "content/detector.js"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/overlay.js", "content/auto-apply.js", "icons/*"],
+      "matches": ["<all_urls>"]
     }
   ],
   "action": {
@@ -22,5 +39,10 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   }
 }
