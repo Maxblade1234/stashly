@@ -351,7 +351,7 @@ export default function HeroSection() {
                   borderBottom: '1px solid #E8E3DB',
                 }}
               >
-                <SvgStashlyIcon size={24} />
+                <Image src="/images/stashly-icon.png" alt="Stashly" width={24} height={24} style={{ borderRadius: 6 }} />
                 <span style={{ fontWeight: 600, fontSize: 15, color: '#1A1A1A' }}>
                   Stashly Dashboard
                 </span>
