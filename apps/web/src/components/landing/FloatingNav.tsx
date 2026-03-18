@@ -41,7 +41,7 @@ export default function FloatingNav() {
           display: 'flex',
           alignItems: 'center',
           gap: 32,
-          padding: '6px 6px 6px 20px',
+          padding: '12px 12px 12px 24px',
           borderRadius: 999,
           background: scrolled ? 'rgba(255,255,255,0.72)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
@@ -70,12 +70,12 @@ export default function FloatingNav() {
             alt="Stashly"
             width={28}
             height={28}
-            style={{ width: 28, height: 28 }}
+            style={{ width: 28, height: 28, transform: 'scaleY(0.9)' }}
             priority
           />
           <span
             style={{
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: 600,
               color: 'var(--text-primary)',
             }}
@@ -98,7 +98,7 @@ export default function FloatingNav() {
               key={link.href}
               href={link.href}
               style={{
-                fontSize: 15,
+                fontSize: 13,
                 fontWeight: 400,
                 color: 'var(--text-body)',
                 textDecoration: 'none',
@@ -125,9 +125,9 @@ export default function FloatingNav() {
           style={{
             background: 'var(--dark)',
             color: '#fff',
-            padding: '8px 20px',
+            padding: '8px 18px',
             borderRadius: 999,
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: 500,
             textDecoration: 'none',
             transition: 'background 0.2s ease, transform 0.2s ease',

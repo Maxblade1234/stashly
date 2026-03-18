@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { LayoutDashboard, Package, Store } from 'lucide-react';
 
 export default async function AdminLayout({
   children,
@@ -26,27 +27,71 @@ export default async function AdminLayout({
   }
 
   const navItems = [
-    { label: 'Overview', href: '/admin' },
-    { label: 'Inventory', href: '/admin/inventory' },
-    { label: 'Retailers', href: '/admin/retailers' },
+    { label: 'Overview', href: '/admin', icon: LayoutDashboard },
+    { label: 'Inventory', href: '/admin/inventory', icon: Package },
+    { label: 'Retailers', href: '/admin/retailers', icon: Store },
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      <div className="flex items-center gap-2 mb-8">
-        <h1 className="text-2xl font-extrabold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>
-          Admin
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 28,
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Admin Dashboard
         </h1>
-        <span className="text-xs font-medium bg-red-50 text-red-600 px-2 py-0.5 rounded-full">Admin</span>
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase' as const,
+            background: 'var(--dark)',
+            color: '#fff',
+            padding: '3px 10px',
+            borderRadius: 'var(--radius-pill)',
+          }}
+        >
+          Admin
+        </span>
       </div>
 
-      <nav className="flex gap-1 mb-8 bg-gray-50 rounded-xl p-1">
+      {/* Tab Nav */}
+      <nav
+        style={{
+          display: 'flex',
+          gap: 4,
+          marginBottom: 32,
+          background: 'var(--bg-warm)',
+          borderRadius: 'var(--radius-md)',
+          padding: 4,
+        }}
+      >
         {navItems.map(item => (
           <Link
             key={item.href}
             href={item.href}
-            className="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-gray-900 hover:bg-white transition-all"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 500,
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--text-body)',
+              transition: 'all 0.2s ease',
+            }}
+            className="hover:bg-white hover:text-[var(--text-primary)] hover:shadow-sm"
           >
+            <item.icon size={15} />
             {item.label}
           </Link>
         ))}
