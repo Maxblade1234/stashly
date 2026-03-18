@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Outfit, IBM_Plex_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -17,9 +15,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stashly — Save More at Checkout",
+  title: "Stashly — Save on Every Gift Card",
   description:
-    "Save up to 15% at checkout with discounted gift cards. Works at Apple, Chipotle, eBay, and more.",
+    "Stashly is the smartest way to buy gift cards. Browse thousands of discounted gift cards and save up to 15% on every purchase.",
 };
 
 export default function RootLayout({
@@ -29,14 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${outfit.variable} ${ibmPlexMono.variable} antialiased`}
-        style={{ backgroundColor: "#FDFAF6" }}
-      >
-        <Navbar />
-        <main className="pt-16">
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
+      <body className={`${outfit.variable} ${ibmPlexMono.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );

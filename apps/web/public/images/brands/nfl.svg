@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="#1A1A1A">
+  <!-- NFL shield icon -->
+  <g transform="translate(40, 1)">
+    <path d="M20 0C12 0 5 2 2 5L0 8v10c0 8 7 15 16 18l4 2 4-2c9-3 16-10 16-18V8l-2-3C35 2 28 0 20 0z"/>
+    <path d="M20 2C13 2 7 4 4 6.5L3 8.5v9c0 7 6 13 14 16l3 1.5 3-1.5c8-3 14-9 14-16v-9L36 6.5C33 4 27 2 20 2z" fill="white"/>
+    <path d="M20 4c-6 0-11 1.5-14 3.5v9c0 6.5 5.5 12 13 14.5L20 31.5l1-0.5c7.5-2.5 13-8 13-14.5v-9C31 5.5 26 4 20 4z"/>
+    <!-- Stars -->
+    <g fill="white">
+      <circle cx="12" cy="12" r="1.2"/>
+      <circle cx="16" cy="9" r="1.2"/>
+      <circle cx="20" cy="7.5" r="1.2"/>
+      <circle cx="24" cy="9" r="1.2"/>
+      <circle cx="28" cy="12" r="1.2"/>
+    </g>
+    <!-- Football laces -->
+    <path d="M15 18h10" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M18 15v6M20 15v6M22 15v6" stroke="white" stroke-width="1" fill="none"/>
+  </g>
+</svg>

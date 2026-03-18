@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" fill="none">
+  <!-- Laptop screen housing -->
+  <rect x="60" y="0" width="1080" height="720" rx="16" ry="16" fill="#2D2D2D"/>
+
+  <!-- Screen bezel inner -->
+  <rect x="72" y="12" width="1056" height="696" rx="8" ry="8" fill="#1A1A1A"/>
+
+  <!-- Camera notch -->
+  <rect x="548" y="0" width="104" height="16" rx="0" ry="0" fill="#1A1A1A"/>
+  <rect x="556" y="2" width="88" height="14" rx="7" ry="7" fill="#2D2D2D"/>
+  <circle cx="600" cy="9" r="4" fill="#0D0D0D"/>
+  <circle cx="600" cy="9" r="2.5" fill="#1A1A2E"/>
+
+  <!-- Screen area (white) -->
+  <rect x="84" y="28" width="1032" height="668" rx="4" ry="4" fill="white"/>
+
+  <!-- Laptop base/body -->
+  <path d="M120 720 L1080 720 L1100 748 Q1100 756 1092 756 L108 756 Q100 756 100 748 Z" fill="#8E8E93"/>
+  <path d="M120 720 L1080 720 L1100 748 Q1100 756 1092 756 L108 756 Q100 756 100 748 Z" fill="url(#bodyGrad)"/>
+
+  <!-- Trackpad indent on body -->
+  <rect x="480" y="726" width="240" height="6" rx="3" ry="3" fill="rgba(255,255,255,0.15)"/>
+
+  <!-- Bottom edge -->
+  <rect x="100" y="754" width="1000" height="4" rx="2" ry="2" fill="#6E6E73"/>
+
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="bodyGrad" x1="0" y1="720" x2="0" y2="758" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C4C4C6"/>
+      <stop offset="0.3" stop-color="#A8A8AD"/>
+      <stop offset="1" stop-color="#8E8E93"/>
+    </linearGradient>
+  </defs>
+</svg>

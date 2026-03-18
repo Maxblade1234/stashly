@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="#1A1A1A">
+  <!-- New Era flag/cap sticker icon -->
+  <g transform="translate(38, 3)">
+    <!-- Flag shape -->
+    <path d="M4 0v34h3V0z"/>
+    <path d="M7 1h30c2 0 2 1.5 0.5 3L32 8l5.5 4c1.5 1.5 1 3-1 3H7V1z"/>
+    <!-- NE text inside flag -->
+    <text x="22" y="12" font-family="Arial Black, sans-serif" font-size="8" font-weight="900" text-anchor="middle" fill="white">NE</text>
+  </g>
+</svg>

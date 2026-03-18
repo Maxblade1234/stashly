@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="#1A1A1A">
+  <!-- Fanatics: bold F mark -->
+  <g transform="translate(38, 2)">
+    <rect x="0" y="0" width="44" height="36" rx="6" fill="#1A1A1A"/>
+    <path d="M12 6h22v5H18v5h14v5H18v10h-6V6z" fill="white"/>
+  </g>
+</svg>

@@ -71,12 +71,12 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/images/stashly-logo.svg"
+            src="/images/Stashly_Logo.png"
             alt="Stashly"
-            width={120}
-            height={32}
-            className="h-7 w-auto"
-            style={{ color: '#1A1A1A' }}
+            width={160}
+            height={40}
+            className="h-9 w-auto"
+            unoptimized
           />
         </Link>
 
@@ -116,8 +116,8 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/signup"
-                className="px-5 py-2.5 text-sm font-semibold text-white rounded-full transition-all hover:shadow-lg"
-                style={{ backgroundColor: '#1A1A1A' }}
+                className="px-5 py-2.5 text-sm font-semibold rounded-full transition-all hover:shadow-lg hover:-translate-y-0.5"
+                style={{ backgroundColor: '#C8E640', color: '#1A1A1A' }}
               >
                 Get Started
               </Link>
@@ -212,11 +212,12 @@ function DarkNav({
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/stashly-logo.svg"
+            src="/images/Stashly_Logo_White.png"
             alt="Stashly"
-            width={120}
-            height={32}
-            className="h-7 w-auto invert brightness-200"
+            width={160}
+            height={40}
+            className="h-9 w-auto"
+            unoptimized
           />
         </Link>
 

@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "design-preview",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["http-server", "design", "-p", "8090", "-c-1"],
-      "port": 8090
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "apps/web"],
+      "port": 3000
     }
   ]
 }

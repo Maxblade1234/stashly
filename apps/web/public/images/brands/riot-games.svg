@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="#1A1A1A">
+  <!-- Riot Games fist icon -->
+  <g transform="translate(40, 2)">
+    <path d="M8 35h24l2-6H14l1-4h16l2-5H17l1-4h12l3-8c0 0-2-4-6-6-3-1.5-7-1.5-10 0C13 4 10 7 8 11L2 30z"/>
+    <path d="M30 35h6l2-8h-6z"/>
+  </g>
+</svg>

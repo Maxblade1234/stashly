@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="#1A1A1A">
+  <!-- Jersey Mike's sub sandwich icon -->
+  <g transform="translate(22, 6)">
+    <!-- Sub bread top -->
+    <path d="M4 16C4 8 14 2 38 2s34 6 34 14H4z" fill="#1A1A1A"/>
+    <!-- Bread inside -->
+    <path d="M6 16C6 10 15 4 38 4s32 6 32 12H6z" fill="#888"/>
+    <!-- Fillings -->
+    <rect x="4" y="16" width="72" height="4" rx="1" fill="#1A1A1A"/>
+    <!-- Sub bread bottom -->
+    <path d="M4 20h72c0 5-12 10-36 10S4 25 4 20z" fill="#1A1A1A"/>
+  </g>
+</svg>
