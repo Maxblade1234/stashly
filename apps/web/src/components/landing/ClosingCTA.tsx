@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 /* ─── Cloud SVG component ─── */
 function CloudSVG() {
@@ -142,8 +143,8 @@ export default function ClosingCTA() {
         >
           Browse gift cards for free. No credit card required.
         </p>
-        <a
-          href="#"
+        <Link
+          href="/signup"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -169,7 +170,7 @@ export default function ClosingCTA() {
         >
           Get started for free
           <ArrowIcon />
-        </a>
+        </Link>
       </div>
     </section>
   );

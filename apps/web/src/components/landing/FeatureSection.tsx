@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 /* ============================================================
    Types
@@ -596,7 +597,8 @@ export default function FeatureSection({
       </p>
 
       {/* CTA */}
-      <button
+      <Link
+        href="/signup"
         style={{
           marginTop: 32,
           background: '#1A1A1A',
@@ -608,20 +610,22 @@ export default function FeatureSection({
           border: 'none',
           cursor: 'pointer',
           transition: 'all 0.2s ease',
+          textDecoration: 'none',
+          display: 'inline-block',
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = '#333';
-          (e.currentTarget as HTMLButtonElement).style.transform =
+          (e.currentTarget as HTMLAnchorElement).style.background = '#333';
+          (e.currentTarget as HTMLAnchorElement).style.transform =
             'translateY(-1px)';
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = '#1A1A1A';
-          (e.currentTarget as HTMLButtonElement).style.transform =
+          (e.currentTarget as HTMLAnchorElement).style.background = '#1A1A1A';
+          (e.currentTarget as HTMLAnchorElement).style.transform =
             'translateY(0)';
         }}
       >
         {data.cta}
-      </button>
+      </Link>
 
       {/* Pills */}
       <div

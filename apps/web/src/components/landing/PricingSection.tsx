@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 /* ─── Types ─── */
 type Period = 'monthly' | 'annual';
@@ -389,7 +390,8 @@ function PricingCard({ plan, period }: { plan: Plan; period: Period }) {
       </ul>
 
       {/* Button */}
-      <button
+      <Link
+        href={`/signup?plan=${plan.name.toLowerCase()}`}
         style={{
           width: '100%',
           padding: '14px 24px',
@@ -399,6 +401,10 @@ function PricingCard({ plan, period }: { plan: Plan; period: Period }) {
           fontFamily: 'inherit',
           cursor: 'pointer',
           transition: 'all 0.2s ease',
+          textDecoration: 'none',
+          display: 'block',
+          textAlign: 'center',
+          boxSizing: 'border-box',
           ...(plan.buttonStyle === 'primary'
             ? {
                 background: 'var(--dark, #1A1A1A)',
@@ -429,7 +435,7 @@ function PricingCard({ plan, period }: { plan: Plan; period: Period }) {
         }}
       >
         {plan.buttonLabel}
-      </button>
+      </Link>
     </div>
   );
 }

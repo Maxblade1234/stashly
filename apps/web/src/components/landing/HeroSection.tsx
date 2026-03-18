@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 /* ─── Cloud CSS (pseudo-elements can't be done inline) ─── */
 const cloudStyles = `
@@ -253,7 +254,8 @@ export default function HeroSection() {
               flexWrap: 'wrap',
             }}
           >
-            <button
+            <Link
+              href="/signup"
               style={{
                 background: '#1A1A1A',
                 color: '#fff',
@@ -265,6 +267,7 @@ export default function HeroSection() {
                 alignItems: 'center',
                 gap: 8,
                 transition: 'all 0.2s ease',
+                textDecoration: 'none',
               }}
               onMouseEnter={(e) => {
                 const t = e.currentTarget;
@@ -283,9 +286,10 @@ export default function HeroSection() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
               </svg>
-            </button>
+            </Link>
 
-            <button
+            <a
+              href="#features"
               style={{
                 background: 'transparent',
                 color: '#1A1A1A',
@@ -295,6 +299,9 @@ export default function HeroSection() {
                 fontSize: 16,
                 border: '1.5px solid #E8E3DB',
                 transition: 'all 0.2s ease',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
               }}
               onMouseEnter={(e) => {
                 const t = e.currentTarget;
@@ -308,7 +315,7 @@ export default function HeroSection() {
               }}
             >
               See features
-            </button>
+            </a>
           </div>
         </div>
 

@@ -50,35 +50,53 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-extrabold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>
-            Dashboard
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Welcome back! Here&apos;s your savings overview.
-          </p>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: 'var(--bg-light, #FAF7F2)' }}
+    >
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1
+              className="text-2xl font-bold"
+              style={{
+                fontFamily: 'var(--font-display)',
+                color: 'var(--text-primary, #1A1A1A)',
+              }}
+            >
+              Dashboard
+            </h1>
+            <p
+              className="text-sm mt-1"
+              style={{ color: 'var(--text-body, #6B6B6B)' }}
+            >
+              Welcome back, {user?.email?.split('@')[0]}! Here&apos;s your savings overview.
+            </p>
+          </div>
+          <Link
+            href="/gift-cards"
+            className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all hover:shadow-lg hover:-translate-y-0.5"
+            style={{
+              backgroundColor: 'var(--dark, #1A1A1A)',
+              color: '#FFFFFF',
+              borderRadius: 'var(--radius-pill, 999px)',
+            }}
+          >
+            <Gift size={16} />
+            Browse Gift Cards
+          </Link>
         </div>
-        <Link
-          href="/gift-cards"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-sm font-semibold hover:shadow-lg transition-all"
-          style={{ backgroundColor: '#2B3FE0' }}
-        >
-          <Gift size={16} />
-          Browse Gift Cards
-        </Link>
-      </div>
 
-      <SavingsSummary
-        totalSaved={profile?.savings_total || 0}
-        savedThisMonth={savedThisMonth}
-        transactionCount={totalTransactions}
-      />
+        <SavingsSummary
+          totalSaved={profile?.savings_total || 0}
+          savedThisMonth={savedThisMonth}
+          transactionCount={totalTransactions}
+        />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <RecentTransactions transactions={formattedTransactions} />
-        <BalanceList />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <RecentTransactions transactions={formattedTransactions} />
+          <BalanceList />
+        </div>
       </div>
     </div>
   );

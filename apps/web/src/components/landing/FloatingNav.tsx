@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
@@ -119,8 +120,8 @@ export default function FloatingNav() {
         </div>
 
         {/* CTA Button */}
-        <a
-          href="#get-started"
+        <Link
+          href="/signup"
           className="nav-cta-btn"
           style={{
             background: 'var(--dark)',
@@ -145,7 +146,7 @@ export default function FloatingNav() {
           }}
         >
           Get started
-        </a>
+        </Link>
 
         {/* Mobile Hamburger */}
         <button
