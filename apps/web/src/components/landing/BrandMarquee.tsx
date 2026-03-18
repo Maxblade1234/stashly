@@ -32,7 +32,7 @@ function LogoImage({ brand }: { brand: { name: string; src: string } }) {
         opacity: 0.35,
         flexShrink: 0,
         transition: 'opacity 0.3s',
-        ...(isMicrosoft ? { transform: 'scale(1.8)' } : {}),
+        ...(isMicrosoft ? { transform: 'scale(2)' } : {}),
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLImageElement).style.opacity = '0.6';

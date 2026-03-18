@@ -41,7 +41,7 @@ export default function FloatingNav() {
           display: 'flex',
           alignItems: 'center',
           gap: 32,
-          padding: '12px 12px 12px 24px',
+          padding: '8px 8px 8px 24px',
           borderRadius: 999,
           background: scrolled ? 'rgba(255,255,255,0.72)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',

@@ -521,23 +521,41 @@ export default function FeatureSection({
 }: FeatureSectionProps) {
   const visualRef = useRef<HTMLDivElement>(null);
 
-  /* Parallax scroll effect */
+  /* Parallax scroll effect with smooth rAF */
   useEffect(() => {
     const el = visualRef.current;
     if (!el) return;
 
-    function onScroll() {
+    let ticking = false;
+    let currentY = 0;
+    let targetY = 0;
+
+    function updateTarget() {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const center = rect.top + rect.height / 2;
       const viewCenter = window.innerHeight / 2;
-      const offset = (center - viewCenter) * 0.06;
-      el.style.transform = `translateY(${clamp(-40, 40, offset)}px)`;
+      targetY = clamp(-40, 40, (center - viewCenter) * 0.04);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(animate);
+      }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    function animate() {
+      currentY += (targetY - currentY) * 0.08;
+      if (Math.abs(currentY - targetY) < 0.5) currentY = targetY;
+      el!.style.transform = `translateY(${currentY}px)`;
+      if (Math.abs(currentY - targetY) > 0.5) {
+        requestAnimationFrame(animate);
+      } else {
+        ticking = false;
+      }
+    }
+
+    window.addEventListener('scroll', updateTarget, { passive: true });
+    updateTarget();
+    return () => window.removeEventListener('scroll', updateTarget);
   }, []);
 
   const data = VARIANTS[variant];
@@ -710,9 +728,7 @@ export default function FeatureSection({
           {reversed ? (
             <>
               {textSide}
-              <div style={{ order: -1 }} className="feature-visual-col">
-                {visualSide}
-              </div>
+              {visualSide}
             </>
           ) : (
             <>
