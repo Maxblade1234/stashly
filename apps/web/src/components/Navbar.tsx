@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { Menu, X, LogOut, LayoutDashboard, CreditCard } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
-const DARK_ROUTES = ['/', '/login', '/signup', '/privacy', '/terms'];
+const DARK_ROUTES = ['/'];
 
 const APP_ROUTES_PREFIX = ['/dashboard', '/gift-cards', '/settings', '/history', '/admin'];
 
@@ -104,7 +104,7 @@ export default function Navbar() {
                 color:
                   pathname === link.href
                     ? 'var(--text-primary, #1A1A1A)'
-                    : 'var(--text-body, #6B6B6B)',
+                    : 'var(--text-primary, #1A1A1A)',
                 backgroundColor:
                   pathname === link.href
                     ? 'rgba(26, 26, 26, 0.06)'
@@ -136,7 +136,7 @@ export default function Navbar() {
               <Link
                 href="/login"
                 className="px-4 py-2 text-sm font-medium transition-colors"
-                style={{ color: 'var(--text-body, #6B6B6B)' }}
+                style={{ color: 'var(--text-primary, #1A1A1A)' }}
               >
                 Log In
               </Link>
@@ -159,7 +159,7 @@ export default function Navbar() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden p-2"
-          style={{ color: 'var(--text-body, #6B6B6B)' }}
+          style={{ color: 'var(--text-primary, #1A1A1A)' }}
         >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -185,7 +185,7 @@ export default function Navbar() {
                 color:
                   pathname === link.href
                     ? 'var(--text-primary, #1A1A1A)'
-                    : 'var(--text-body, #6B6B6B)',
+                    : 'var(--text-primary, #1A1A1A)',
                 backgroundColor:
                   pathname === link.href
                     ? 'rgba(26, 26, 26, 0.06)'
@@ -200,7 +200,7 @@ export default function Navbar() {
             <button
               onClick={handleSignOut}
               className="flex items-center gap-3 px-4 py-3 text-sm w-full"
-              style={{ color: 'var(--text-body, #6B6B6B)' }}
+              style={{ color: 'var(--text-primary, #1A1A1A)' }}
             >
               <LogOut size={18} />
               Sign Out
@@ -211,7 +211,7 @@ export default function Navbar() {
                 href="/login"
                 onClick={() => setMenuOpen(false)}
                 className="block px-4 py-3 text-sm"
-                style={{ color: 'var(--text-body, #6B6B6B)' }}
+                style={{ color: 'var(--text-primary, #1A1A1A)' }}
               >
                 Log In
               </Link>
