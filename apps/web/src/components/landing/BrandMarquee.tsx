@@ -19,6 +19,8 @@ const brandsRow2 = [...brandsRow1].reverse();
 
 function LogoImage({ brand }: { brand: { name: string; src: string } }) {
   const isMicrosoft = brand.name === 'Microsoft';
+  const isChipotle = brand.name === 'Chipotle';
+  const extraScale = isMicrosoft ? 'scale(2)' : isChipotle ? 'scale(1.5)' : undefined;
   return (
     <Image
       src={brand.src}
@@ -32,7 +34,7 @@ function LogoImage({ brand }: { brand: { name: string; src: string } }) {
         opacity: 0.35,
         flexShrink: 0,
         transition: 'opacity 0.3s',
-        ...(isMicrosoft ? { transform: 'scale(2)' } : {}),
+        ...(extraScale ? { transform: extraScale } : {}),
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLImageElement).style.opacity = '0.6';

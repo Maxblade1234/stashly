@@ -274,7 +274,7 @@ function OrderMockupCard() {
                 alt={row.brand}
                 width={40}
                 height={40}
-                style={{ objectFit: 'contain', padding: 4 }}
+                style={{ objectFit: 'contain', padding: 4, ...(row.brand === 'Chipotle' ? { transform: 'scale(1.5)' } : {}) }}
               />
             </div>
 

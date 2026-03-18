@@ -504,7 +504,7 @@ export default function PhoneDemo() {
                             alt={card.name}
                             width={36}
                             height={36}
-                            style={{ objectFit: 'contain' }}
+                            style={{ objectFit: 'contain', ...(card.name === 'Chipotle' ? { transform: 'scale(1.5)' } : {}) }}
                           />
                         </div>
                       ) : (

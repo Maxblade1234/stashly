@@ -452,7 +452,7 @@ export default function HeroSection() {
                                   alt={o.brand}
                                   width={24}
                                   height={24}
-                                  style={{ borderRadius: 6, objectFit: 'contain' }}
+                                  style={{ borderRadius: 6, objectFit: 'contain', ...(o.brand === 'Chipotle' ? { transform: 'scale(1.5)' } : {}) }}
                                 />
                                 <span style={{ fontWeight: 500, color: '#1A1A1A' }}>{o.brand}</span>
                               </div>
