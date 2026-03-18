@@ -521,41 +521,31 @@ export default function FeatureSection({
 }: FeatureSectionProps) {
   const visualRef = useRef<HTMLDivElement>(null);
 
-  /* Parallax scroll effect with smooth rAF */
+  /* Parallax scroll effect — direct, no lerp lag */
   useEffect(() => {
     const el = visualRef.current;
     if (!el) return;
 
-    let ticking = false;
-    let currentY = 0;
-    let targetY = 0;
+    let rafId = 0;
 
-    function updateTarget() {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const center = rect.top + rect.height / 2;
-      const viewCenter = window.innerHeight / 2;
-      targetY = clamp(-40, 40, (center - viewCenter) * 0.04);
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(animate);
-      }
+    function onScroll() {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const viewCenter = window.innerHeight / 2;
+        const offset = clamp(-20, 20, (center - viewCenter) * 0.03);
+        el.style.transform = `translateY(${offset}px)`;
+      });
     }
 
-    function animate() {
-      currentY += (targetY - currentY) * 0.08;
-      if (Math.abs(currentY - targetY) < 0.5) currentY = targetY;
-      el!.style.transform = `translateY(${currentY}px)`;
-      if (Math.abs(currentY - targetY) > 0.5) {
-        requestAnimationFrame(animate);
-      } else {
-        ticking = false;
-      }
-    }
-
-    window.addEventListener('scroll', updateTarget, { passive: true });
-    updateTarget();
-    return () => window.removeEventListener('scroll', updateTarget);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const data = VARIANTS[variant];

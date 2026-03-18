@@ -41,7 +41,7 @@ export default function FloatingNav() {
           display: 'flex',
           alignItems: 'center',
           gap: 32,
-          padding: '8px 8px 8px 24px',
+          padding: '6px 6px 6px 20px',
           borderRadius: 999,
           background: scrolled ? 'rgba(255,255,255,0.72)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
@@ -125,7 +125,7 @@ export default function FloatingNav() {
           style={{
             background: 'var(--dark)',
             color: '#fff',
-            padding: '10px 22px',
+            padding: '8px 20px',
             borderRadius: 999,
             fontSize: 14,
             fontWeight: 500,

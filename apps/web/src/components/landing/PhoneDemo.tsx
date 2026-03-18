@@ -118,20 +118,35 @@ export default function PhoneDemo() {
     const conf = confettiRef.current;
     if (!l1 || !l2 || !l3 || !cl || !dc || !atc || !cc || !cm || !conf) return;
 
+    /*
+     * Progress ranges WITH pauses:
+     * 0.00–0.18  Phase 1: scroll card list
+     * 0.18–0.24  PAUSE (hold after scroll)
+     * 0.24–0.34  Phase 2: highlight Domino's
+     * 0.34–0.40  PAUSE (hold after highlight)
+     * 0.40–0.52  Phase 3: slide to detail screen
+     * 0.52–0.58  PAUSE (view detail screen)
+     * 0.58–0.64  Phase 3b: tap Add to Cart
+     * 0.64–0.70  PAUSE (hold after tap)
+     * 0.70–0.82  Phase 4: slide to confirmation + checkmark
+     * 0.82–0.88  PAUSE (view confirmation)
+     * 0.88–1.00  Phase 5: confetti
+     */
+
     let phase: number;
-    if (progress < 0.25) phase = 0;
+    if (progress < 0.24) phase = 0;
     else if (progress < 0.40) phase = 1;
-    else if (progress < 0.65) phase = 2;
-    else if (progress < 0.85) phase = 3;
+    else if (progress < 0.70) phase = 2;
+    else if (progress < 0.88) phase = 3;
     else phase = 4;
 
-    /* Phase 1: 0–0.25 — scroll card list */
-    const scrollY = progress < 0.25 ? (progress / 0.25) * 80 : 80;
-    cl.style.transform = `translateY(-${scrollY}px)`;
+    /* Phase 1: 0–0.18 — scroll card list (pause 0.18–0.24) */
+    const scrollP = Math.min(progress / 0.18, 1);
+    cl.style.transform = `translateY(-${scrollP * 80}px)`;
 
-    /* Phase 2: 0.25–0.40 — highlight Domino's */
-    const p2sub = progress < 0.25 ? 0 : progress < 0.40 ? (progress - 0.25) / 0.15 : 1;
-    if (p2sub > 0.3) {
+    /* Phase 2: 0.24–0.34 — highlight Domino's (pause 0.34–0.40) */
+    const highlightP = progress < 0.24 ? 0 : progress < 0.34 ? (progress - 0.24) / 0.10 : progress < 0.40 ? 1 : 1;
+    if (highlightP > 0.3) {
       dc.style.background = '#EFF7EF';
       dc.style.border = '2px solid var(--green)';
       dc.style.boxShadow = '0 0 12px rgba(45,122,47,0.15)';
@@ -143,13 +158,13 @@ export default function PhoneDemo() {
       dc.style.transform = 'scale(1)';
     }
 
-    /* Phase 3: 0.40–0.65 — slide list out, detail in */
-    const p3sub = progress < 0.40 ? 0 : progress < 0.65 ? (progress - 0.40) / 0.25 : 1;
+    /* Phase 3: 0.40–0.52 — slide list out, detail in (pause 0.52–0.58) */
+    const slideP = progress < 0.40 ? 0 : progress < 0.52 ? (progress - 0.40) / 0.12 : 1;
     if (progress >= 0.40) {
-      l1.style.transform = `translateX(-${p3sub * 100}%)`;
-      l1.style.opacity = `${1 - p3sub}`;
-      l2.style.transform = `translateX(${(1 - p3sub) * 100}%)`;
-      l2.style.opacity = `${p3sub}`;
+      l1.style.transform = `translateX(-${slideP * 100}%)`;
+      l1.style.opacity = `${1 - slideP}`;
+      l2.style.transform = `translateX(${(1 - slideP) * 100}%)`;
+      l2.style.opacity = `${slideP}`;
     } else {
       l1.style.transform = 'translateX(0)';
       l1.style.opacity = '1';
@@ -157,8 +172,8 @@ export default function PhoneDemo() {
       l2.style.opacity = '0';
     }
 
-    /* Add to Cart tap */
-    if (p3sub > 0.6) {
+    /* Phase 3b: 0.58–0.64 — tap Add to Cart (pause 0.64–0.70) */
+    if (progress >= 0.58) {
       atc.style.background = '#333';
       atc.style.transform = 'scale(0.97)';
     } else {
@@ -166,35 +181,34 @@ export default function PhoneDemo() {
       atc.style.transform = 'scale(1)';
     }
 
-    /* Phase 4: 0.65–0.85 — slide detail out, confirm in + checkmark */
-    const p4sub = progress < 0.65 ? 0 : progress < 0.85 ? (progress - 0.65) / 0.20 : 1;
-    if (progress >= 0.65) {
-      l2.style.transform = `translateX(-${p4sub * 100}%)`;
-      l2.style.opacity = `${1 - p4sub}`;
-      l3.style.transform = `translateX(${(1 - p4sub) * 100}%)`;
-      l3.style.opacity = `${p4sub}`;
+    /* Phase 4: 0.70–0.82 — slide detail out, confirm in + checkmark (pause 0.82–0.88) */
+    const confirmP = progress < 0.70 ? 0 : progress < 0.82 ? (progress - 0.70) / 0.12 : 1;
+    if (progress >= 0.70) {
+      l2.style.transform = `translateX(-${confirmP * 100}%)`;
+      l2.style.opacity = `${1 - confirmP}`;
+      l3.style.transform = `translateX(${(1 - confirmP) * 100}%)`;
+      l3.style.opacity = `${confirmP}`;
     } else {
       l3.style.transform = 'translateX(100%)';
       l3.style.opacity = '0';
     }
 
     /* Animate checkmark */
-    const circleProgress = Math.min(p4sub * 2, 1);
-    const checkProgress = Math.max((p4sub - 0.5) * 2, 0);
+    const circleProgress = Math.min(confirmP * 2, 1);
+    const checkProgress = Math.max((confirmP - 0.5) * 2, 0);
     cc.style.strokeDashoffset = `${226 * (1 - circleProgress)}`;
     cm.style.strokeDashoffset = `${36 * (1 - checkProgress)}`;
 
-    /* Phase 5: 0.85–1.0 — confetti */
-    if (progress >= 0.85 && stateRef.current.lastRenderedPhase < 4) {
+    /* Phase 5: 0.88–1.0 — confetti */
+    if (progress >= 0.88 && stateRef.current.lastRenderedPhase < 4) {
       conf.style.display = 'block';
-      // Force reflow to restart animation
       conf.offsetHeight; // eslint-disable-line @typescript-eslint/no-unused-expressions
       conf.querySelectorAll<HTMLElement>('.confetti-dot, .confetti-star').forEach(el => {
         el.style.animation = 'none';
         el.offsetHeight; // eslint-disable-line @typescript-eslint/no-unused-expressions
         el.style.animation = '';
       });
-    } else if (progress < 0.85) {
+    } else if (progress < 0.88) {
       conf.style.display = 'none';
     }
 

@@ -19,8 +19,7 @@ const brandsRow2 = [...brandsRow1].reverse();
 
 function LogoImage({ brand }: { brand: { name: string; src: string } }) {
   const isMicrosoft = brand.name === 'Microsoft';
-  const isChipotle = brand.name === 'Chipotle';
-  const extraScale = isMicrosoft ? 'scale(2)' : isChipotle ? 'scale(1.5)' : undefined;
+  const extraScale = isMicrosoft ? 'scale(2)' : undefined;
   return (
     <Image
       src={brand.src}
