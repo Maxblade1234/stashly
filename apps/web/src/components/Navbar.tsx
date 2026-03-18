@@ -82,6 +82,7 @@ export default function Navbar() {
             width={28}
             height={28}
             className="h-7 w-7"
+            style={{ transform: 'scaleY(0.9)' }}
             unoptimized
           />
           <span
