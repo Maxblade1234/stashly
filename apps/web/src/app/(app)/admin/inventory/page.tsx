@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Loader2, Plus, Package } from 'lucide-react';
+import { Loader2, Plus, Package, X } from 'lucide-react';
 
 interface InventorySummary {
   retailer: string;
@@ -69,34 +69,82 @@ export default function AdminInventoryPage() {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    padding: '10px 14px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    fontSize: 14,
+    color: 'var(--text-primary)',
+    background: 'var(--surface)',
+    outline: 'none',
+    transition: 'border-color 0.2s ease',
+    width: '100%',
+  };
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+        <h2
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 20,
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+          }}
+        >
           Inventory
         </h2>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-sm font-medium hover:shadow-md transition-all"
-          style={{ backgroundColor: '#2B3FE0' }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '10px 20px',
+            borderRadius: 'var(--radius-pill)',
+            background: 'var(--dark)',
+            color: '#fff',
+            fontSize: 13,
+            fontWeight: 500,
+            transition: 'all 0.2s ease',
+          }}
         >
-          <Plus size={14} />
-          Add Card
+          {showAddForm ? <X size={14} /> : <Plus size={14} />}
+          {showAddForm ? 'Cancel' : 'Add Card'}
         </button>
       </div>
 
       {/* Add card form */}
       {showAddForm && (
-        <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-4">Add Gift Card to Inventory</h3>
-          <div className="grid grid-cols-2 gap-3 mb-4">
+        <form
+          onSubmit={handleAdd}
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            padding: 28,
+            marginBottom: 24,
+          }}
+        >
+          <h3
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: 20,
+            }}
+          >
+            Add Gift Card to Inventory
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
             <input
               type="text"
               placeholder="Retailer name"
               value={addForm.retailer_name}
               onChange={e => setAddForm(f => ({ ...f, retailer_name: e.target.value }))}
               required
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              style={inputStyle}
             />
             <input
               type="number"
@@ -104,7 +152,7 @@ export default function AdminInventoryPage() {
               value={addForm.denomination}
               onChange={e => setAddForm(f => ({ ...f, denomination: e.target.value }))}
               required
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              style={inputStyle}
             />
             <input
               type="text"
@@ -112,7 +160,7 @@ export default function AdminInventoryPage() {
               value={addForm.code}
               onChange={e => setAddForm(f => ({ ...f, code: e.target.value }))}
               required
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              style={inputStyle}
             />
             <input
               type="number"
@@ -121,20 +169,38 @@ export default function AdminInventoryPage() {
               onChange={e => setAddForm(f => ({ ...f, discount_percent: e.target.value }))}
               required
               step="0.1"
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              style={inputStyle}
             />
           </div>
-          <div className="flex items-center gap-3">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <button
               type="submit"
               disabled={adding}
-              className="px-4 py-2 rounded-lg text-white text-sm font-medium disabled:opacity-50"
-              style={{ backgroundColor: '#2B3FE0' }}
+              style={{
+                padding: '10px 24px',
+                borderRadius: 'var(--radius-pill)',
+                background: 'var(--dark)',
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 500,
+                opacity: adding ? 0.5 : 1,
+                cursor: adding ? 'not-allowed' : 'pointer',
+              }}
             >
-              {adding ? <Loader2 size={14} className="animate-spin" /> : 'Add Card'}
+              {adding ? (
+                <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
+              ) : (
+                'Add Card'
+              )}
             </button>
             {message && (
-              <span className={`text-xs ${message.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+              <span
+                style={{
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: message.includes('success') ? 'var(--green)' : '#DC2626',
+                }}
+              >
                 {message}
               </span>
             )}
@@ -144,46 +210,49 @@ export default function AdminInventoryPage() {
 
       {/* Inventory table */}
       {loading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-gray-400" />
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '64px 0' }}>
+          <Loader2 size={24} style={{ color: 'var(--text-muted)', animation: 'spin 1s linear infinite' }} />
         </div>
       ) : summary.length === 0 ? (
-        <div className="text-center py-12">
-          <Package size={40} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-400 text-sm">No inventory data available</p>
-          <p className="text-gray-400 text-xs mt-1">Make sure the inventory service is running</p>
+        <div style={{ textAlign: 'center', padding: '64px 0' }}>
+          <Package size={40} style={{ color: 'var(--border)', margin: '0 auto 12px' }} />
+          <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>No inventory data available</p>
+          <p style={{ color: 'var(--text-light)', fontSize: 13, marginTop: 4 }}>
+            Make sure the inventory service is running
+          </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
+        <div
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            overflow: 'hidden',
+          }}
+        >
+          <table style={{ width: '100%', fontSize: 14, borderCollapse: 'collapse' }}>
             <thead>
-              <tr className="bg-gray-50 text-left">
-                <th className="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Retailer</th>
-                <th className="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Denomination</th>
-                <th className="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Available</th>
-                <th className="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Reserved</th>
-                <th className="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Sold</th>
+              <tr style={{ background: 'var(--bg-warm)' }}>
+                <th style={thStyle}>Retailer</th>
+                <th style={thStyle}>Denomination</th>
+                <th style={{ ...thStyle, textAlign: 'center' }}>Available</th>
+                <th style={{ ...thStyle, textAlign: 'center' }}>Reserved</th>
+                <th style={{ ...thStyle, textAlign: 'center' }}>Sold</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {summary.map((row, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-5 py-3 font-medium text-gray-900">{row.retailer}</td>
-                  <td className="px-5 py-3 text-gray-600" style={{ fontFamily: 'var(--font-mono)' }}>${row.denomination}</td>
-                  <td className="px-5 py-3 text-center">
-                    <span className="inline-flex items-center justify-center w-8 h-6 rounded-full bg-green-50 text-green-700 text-xs font-bold">
-                      {row.available}
-                    </span>
+                <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ ...tdStyle, fontWeight: 500, color: 'var(--text-primary)' }}>{row.retailer}</td>
+                  <td style={{ ...tdStyle, fontFamily: 'var(--font-mono)' }}>${row.denomination}</td>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>
+                    <CountBadge value={row.available} bg="var(--green-bg)" color="var(--green)" />
                   </td>
-                  <td className="px-5 py-3 text-center">
-                    <span className="inline-flex items-center justify-center w-8 h-6 rounded-full bg-yellow-50 text-yellow-700 text-xs font-bold">
-                      {row.reserved}
-                    </span>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>
+                    <CountBadge value={row.reserved} bg="var(--bg-warm)" color="var(--text-muted)" />
                   </td>
-                  <td className="px-5 py-3 text-center">
-                    <span className="inline-flex items-center justify-center w-8 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold">
-                      {row.sold}
-                    </span>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>
+                    <CountBadge value={row.sold} bg="var(--bg-sky)" color="var(--text-body)" />
                   </td>
                 </tr>
               ))}
@@ -192,5 +261,42 @@ export default function AdminInventoryPage() {
         </div>
       )}
     </div>
+  );
+}
+
+const thStyle: React.CSSProperties = {
+  padding: '12px 20px',
+  textAlign: 'left',
+  fontSize: 12,
+  fontWeight: 600,
+  color: 'var(--text-muted)',
+  letterSpacing: '0.05em',
+  textTransform: 'uppercase',
+};
+
+const tdStyle: React.CSSProperties = {
+  padding: '14px 20px',
+  color: 'var(--text-body)',
+};
+
+function CountBadge({ value, bg, color }: { value: number; bg: string; color: string }) {
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 28,
+        height: 24,
+        borderRadius: 'var(--radius-pill)',
+        background: bg,
+        color: color,
+        fontSize: 12,
+        fontWeight: 700,
+        padding: '0 8px',
+      }}
+    >
+      {value}
+    </span>
   );
 }
