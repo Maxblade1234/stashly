@@ -11,7 +11,7 @@ Stashly is a gift card marketplace paired with a Chrome extension. Users buy bra
 1. **Buy** discounted gift cards on the Stashly web app (e.g. $100 Apple card for $92).
 2. **Shop** normally at a supported retailer.
 3. **Checkout detection** — the extension recognizes the checkout page, reads the cart total, and computes the optimal *stack* of card denominations to cover it.
-4. **Apply** — one click fills the gift card fields. The user always places the order themselves; the extension never submits a purchase.
+4. **Apply** — one click fills the gift card fields and presses the retailer's own *Apply* button. The user always places the order themselves; the extension never submits a purchase.
 
 ## Architecture
 
@@ -23,25 +23,25 @@ apps/
 │   ├── content/         Checkout detection, overlay UI, auto-apply
 │   ├── background.js    Service worker: API relay, caching
 │   └── popup/           Balances & savings summary
-├── web/                 Next.js 15 app (marketplace, dashboard, admin)
+├── web/                 Next.js 16 app (marketplace, dashboard, admin)
 │   ├── src/app/(app)/api/   REST endpoints: /stack, /purchase, /balances, …
 │   ├── src/lib/stacking.ts  Greedy denomination-stacking algorithm
 │   ├── src/services/payment/  Processor adapter pattern (Stripe test / Stax)
 │   └── supabase/        Postgres migrations with row-level security
 ├── inventory-service/   Express + SQLite service holding card codes
 │   ├── src/encryption.ts    AES-256-GCM at rest, key held only by this service
-│   └── src/reservation.ts   Reserve → commit/release lifecycle
+│   └── src/reservation.ts   Stale-reservation expiry job
 packages/shared/         Shared TypeScript types and constants
 ```
 
 Design decisions worth noting:
 
 - **Card codes live in one place.** The inventory service is a separate process on a private network; the web app talks to it over an authenticated internal API and never stores plaintext codes. Codes are AES-256-GCM encrypted at rest.
-- **Reservation lifecycle.** Purchases reserve inventory first, then charge, then commit — a failed payment releases the reservation instead of leaking cards.
-- **Minimal extension permissions.** The manifest requests host access only for the ten supported retailer domains, so the browser itself guarantees the extension cannot run anywhere else.
-- **The extension never places orders.** Auto-apply fills gift card fields and stops. Submitting checkout is always a human action.
+- **Reservation lifecycle.** Purchases reserve inventory first, then charge — a failed payment returns the reservation to the pool instead of leaking cards, and a background job expires stale holds.
+- **Minimal extension permissions.** Host permissions and content-script injection are scoped to the eight supported retailer domains (plus Stashly itself) — the browser refuses to run the extension anywhere else.
+- **The extension never places orders.** Auto-apply fills gift card fields and clicks the retailer's own apply button — never the order button. Submitting checkout is always a human action.
 - **Payment processor abstraction.** Stripe prohibits gift card resale, so payments go through an adapter interface (`services/payment/`) — Stripe test keys for local development, a Stax adapter for production.
-- **Demo mode.** `STASHLY_MODE=demo` serves mock inventory so the full flow can be demonstrated without live payment rails.
+- **Demo mode.** `NEXT_PUBLIC_STASHLY_MODE=demo` serves mock inventory so the full flow can be demonstrated without live payment rails.
 
 The full technical design — API contracts, KYC tiers, fraud/risk engine, checkout-detection scoring, trust zones, failure modes — is in **[docs/stashly-systems-design.md](docs/stashly-systems-design.md)** (20 sections). Earlier design and implementation plans live in [docs/plans/](docs/plans/).
 
@@ -54,7 +54,7 @@ npm install
 cp .env.example apps/web/.env.local   # fill in Supabase keys, or set NEXT_PUBLIC_STASHLY_MODE=demo
 npm run dev -w apps/web
 
-# Inventory service — http://localhost:3511
+# Inventory service — http://localhost:3001
 npm run dev -w apps/inventory-service
 
 # Extension: chrome://extensions → "Load unpacked" → apps/extension
@@ -63,13 +63,12 @@ npm run dev -w apps/inventory-service
 Tests:
 
 ```bash
-npm test -w apps/web                # stacking algorithm, payment API, webhook handler
-npm test -w apps/inventory-service  # card reservation lifecycle
+npm test   # all suites: stacking algorithm, payment API, webhook handler, inventory reservations
 ```
 
 ## Stack
 
-Next.js 15 · React · TypeScript · Supabase (Postgres + Auth + RLS) · Express · SQLite · Chrome Manifest V3 · Vitest · Tailwind CSS
+Next.js 16 · React · TypeScript · Supabase (Postgres + Auth + RLS) · Express · SQLite · Chrome Manifest V3 · Vitest · Tailwind CSS
 
 ## Status & disclaimer
 

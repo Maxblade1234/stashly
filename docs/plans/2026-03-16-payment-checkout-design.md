@@ -5,7 +5,7 @@
 **Approved:** 2026-03-16
 **Scope:** Phase 2 (checkout flow with Stripe Elements)
 **Depends on:** Phase 1 (PaymentService interface, StripeAdapter, DB schema)
-**Reference:** `/Users/vicentexia/Downloads/stashly_payment_spec.md` Sections 6-9
+**Reference:** `stashly_payment_spec.md (external)` Sections 6-9
 
 ---
 

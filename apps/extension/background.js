@@ -48,7 +48,7 @@ async function handleMessage(message) {
 
 // Refresh retailer configs on install/update
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[Stashly] Extension installed/updated');
+  console.debug('[Stashly] Extension installed/updated');
   retailerManager.refreshConfigs();
 });
 

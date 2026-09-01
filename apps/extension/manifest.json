@@ -3,7 +3,7 @@
   "name": "Stashly — Save at Checkout",
   "version": "0.1.0",
   "description": "Save up to 15% at checkout with discounted gift cards. Works at Apple, Chipotle, eBay, and more.",
-  "permissions": ["activeTab", "storage", "cookies", "alarms"],
+  "permissions": ["activeTab", "storage", "alarms"],
   "host_permissions": [
     "https://*.stashly.com/*",
     "http://localhost:3000/*",
@@ -21,7 +21,18 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "https://*.stashly.com/*",
+        "http://localhost:3000/*",
+        "https://*.apple.com/*",
+        "https://*.chipotle.com/*",
+        "https://*.dominos.com/*",
+        "https://*.ebay.com/*",
+        "https://*.neweracap.com/*",
+        "https://*.nflshop.com/*",
+        "https://*.jerseymikes.com/*",
+        "https://*.fanatics.com/*"
+      ],
       "js": ["utils/config.js", "content/detector.js"],
       "run_at": "document_idle"
     }
@@ -29,7 +40,16 @@
   "web_accessible_resources": [
     {
       "resources": ["content/overlay.js", "content/auto-apply.js", "icons/*"],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "https://*.apple.com/*",
+        "https://*.chipotle.com/*",
+        "https://*.dominos.com/*",
+        "https://*.ebay.com/*",
+        "https://*.neweracap.com/*",
+        "https://*.nflshop.com/*",
+        "https://*.jerseymikes.com/*",
+        "https://*.fanatics.com/*"
+      ]
     }
   ],
   "action": {

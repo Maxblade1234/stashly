@@ -7,7 +7,7 @@ window.addEventListener('message', async (event) => {
   const { codes, retailer } = event.data;
   if (!codes || !codes.length || !retailer) return;
 
-  console.log('[Stashly Auto-Apply] Received codes for', retailer.name);
+  console.debug('[Stashly Auto-Apply] Received codes for', retailer.name);
 
   // Get retailer config for selectors
   const response = await chrome.runtime.sendMessage({
@@ -30,7 +30,7 @@ window.addEventListener('message', async (event) => {
 
     if (success) {
       appliedCount++;
-      console.log(`[Stashly Auto-Apply] Applied code ${i + 1}/${codes.length}`);
+      console.debug(`[Stashly Auto-Apply] Applied code ${i + 1}/${codes.length}`);
     } else {
       console.warn(`[Stashly Auto-Apply] Failed to apply code ${i + 1}, showing fallback`);
       showFallbackPanel(codes.slice(i));

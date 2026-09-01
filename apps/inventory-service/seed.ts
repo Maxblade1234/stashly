@@ -7,6 +7,7 @@ import crypto from 'crypto';
 // Run: npx tsx seed.ts
 
 const DB_PATH = process.env.INVENTORY_DB_PATH || path.join(__dirname, 'data', 'inventory.db');
+// Insecure fallback is for local demo seeding only — the service itself (src/encryption.ts) hard-requires the env var.
 const ENCRYPTION_KEY = process.env.CARD_ENCRYPTION_KEY || 'a'.repeat(64);
 
 // Seed data: retailer gift cards with realistic denominations

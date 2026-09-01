@@ -21,7 +21,7 @@
 
 Run:
 ```bash
-cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp
+cd <repo-root>
 npm install @stripe/stripe-js @stripe/react-stripe-js -w apps/web
 ```
 
@@ -105,7 +105,7 @@ In `packages/shared/src/types.ts`, update `PurchaseRequest` (lines 100-104) to a
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -135,7 +135,7 @@ if (pathname.startsWith('/api/webhooks/')) {
 
 **Step 2: Verify no test breakage**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npm test -w apps/web`
+Run: `cd <repo-root> && npm test -w apps/web`
 Expected: All existing tests pass.
 
 **Step 3: Commit**
@@ -403,7 +403,7 @@ export async function PUT(
 
 **Step 4: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 5: Commit**
 
@@ -620,7 +620,7 @@ async function handleDispute(
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -801,7 +801,7 @@ try {
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -880,7 +880,7 @@ export default function StripeProvider({ children }: StripeProviderProps) {
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -1028,7 +1028,7 @@ export default function PaymentInput({
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -1296,7 +1296,7 @@ export default function PaymentMethodManager() {
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -1444,7 +1444,7 @@ Add `NEXT_PUBLIC_STASHLY_MODE=demo` to the env example file so the frontend can 
 
 **Step 3: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 4: Commit**
 
@@ -1490,7 +1490,7 @@ After line 89 (`</div>` closing the Account card with `mb-6`), add:
 
 **Step 2: Verify build**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npx tsc --noEmit -p apps/web/tsconfig.json`
+Run: `cd <repo-root> && npx tsc --noEmit -p apps/web/tsconfig.json`
 
 **Step 3: Commit**
 
@@ -1593,7 +1593,7 @@ describe('POST /api/payment-methods', () => {
 
 **Step 2: Run tests**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npm test -w apps/web -- --run`
+Run: `cd <repo-root> && npm test -w apps/web -- --run`
 Expected: New tests pass alongside existing tests.
 
 **Step 3: Commit**
@@ -1701,7 +1701,7 @@ describe('POST /api/webhooks/stripe', () => {
 
 **Step 2: Run tests**
 
-Run: `cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp && npm test -w apps/web -- --run`
+Run: `cd <repo-root> && npm test -w apps/web -- --run`
 
 **Step 3: Commit**
 
@@ -1718,7 +1718,7 @@ git commit -m "test: add unit tests for Stripe webhook handler"
 
 Run:
 ```bash
-cd /Users/vicentexia/Downloads/GiftHauls/Stashly\ Extension/.worktrees/mvp
+cd <repo-root>
 npx tsc --noEmit -p apps/web/tsconfig.json
 npm test -w apps/web -- --run
 ```

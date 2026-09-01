@@ -16,7 +16,7 @@
   if (!response || !response.retailer) return;
 
   const retailer = response.retailer;
-  console.log('[Stashly] Detected retailer:', retailer.name);
+  console.debug('[Stashly] Detected retailer:', retailer.name);
 
   // Check if we're on a checkout page
   const currentUrl = window.location.href;
@@ -30,11 +30,11 @@
   });
 
   if (!isCheckout) {
-    console.log('[Stashly] Not a checkout page, skipping');
+    console.debug('[Stashly] Not a checkout page, skipping');
     return;
   }
 
-  console.log('[Stashly] Checkout page detected!');
+  console.debug('[Stashly] Checkout page detected!');
 
   // Try to read cart total
   let cartTotal = 0;
@@ -55,7 +55,7 @@
   }
 
   if (cartTotal <= 0) {
-    console.log('[Stashly] Could not read cart total, using manual entry mode');
+    console.debug('[Stashly] Could not read cart total, using manual entry mode');
   }
 
   // Wait a moment for page to settle

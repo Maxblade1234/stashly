@@ -4,7 +4,7 @@
 
 **Approved:** 2026-03-16
 **Scope:** Phase 1 only (service abstraction + Stripe adapter + DB schema)
-**Reference:** `/Users/vicentexia/Downloads/stashly_payment_spec.md`
+**Reference:** `stashly_payment_spec.md (external)`
 
 ---
 
