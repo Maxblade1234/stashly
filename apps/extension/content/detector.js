@@ -64,12 +64,27 @@
   // Check auth status
   const auth = await chrome.runtime.sendMessage({ type: 'CHECK_AUTH' });
 
+  // Marketplace rate comparison (Stashly inventory + partner marketplaces).
+  // Public data — fetched regardless of auth state.
+  let rates = null;
+  try {
+    const ratesResponse = await chrome.runtime.sendMessage({
+      type: 'GET_RATES',
+      retailerName: retailer.name,
+      cartTotal,
+    });
+    rates = ratesResponse.comparison || null;
+  } catch (err) {
+    console.debug('[Stashly] Rate comparison unavailable:', err);
+  }
+
   if (!auth.authenticated) {
-    // Show login prompt overlay
+    // Show login prompt overlay (with market rates if we have them)
     injectOverlay({
       retailer,
       authenticated: false,
       cartTotal,
+      rates,
     });
     return;
   }
@@ -107,6 +122,7 @@
     cartTotal,
     stack,
     balances,
+    rates,
   });
 })();
 

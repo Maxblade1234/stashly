@@ -146,3 +146,40 @@ export interface PaymentConfig {
   publishableKey: string;
   processor: PaymentProcessor;
 }
+
+// Marketplace aggregation types (hybrid model)
+// Quotes come from Stashly's own inventory plus partner marketplaces.
+export type MarketplaceSource =
+  | 'stashly'
+  | 'cardcash'
+  | 'raise'
+  | 'gcx'
+  | 'giftcardwiki';
+
+export interface MarketplaceQuote {
+  source: MarketplaceSource;
+  source_label: string;
+  /** For aggregator sources (GiftCardWiki), the underlying seller the rate came from. */
+  via: string | null;
+  retailer_name: string;
+  discount_percent: number;
+  min_card_value: number;
+  max_card_value: number;
+  /** Public/affiliate URL to buy externally; null for Stashly inventory (fulfilled in-app). */
+  purchase_url: string | null;
+  fulfillment: 'instant' | 'external';
+  verified_at: string;
+}
+
+export interface RateComparison {
+  retailer_name: string;
+  cart_total: number | null;
+  /** All quotes, sorted best discount first. */
+  quotes: MarketplaceQuote[];
+  best: MarketplaceQuote | null;
+  /** Cart-total savings estimate at the best rate (null when no cart_total given). */
+  estimated_savings: number | null;
+  /** How much better (percentage points) the best external rate is than Stashly's; negative means Stashly wins. */
+  external_edge_pct: number | null;
+  as_of: string;
+}

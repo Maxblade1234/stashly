@@ -11,7 +11,8 @@ Stashly is a gift card marketplace paired with a Chrome extension. Users buy bra
 1. **Buy** discounted gift cards on the Stashly web app (e.g. $100 Apple card for $92).
 2. **Shop** normally at a supported retailer.
 3. **Checkout detection** — the extension recognizes the checkout page, reads the cart total, and computes the optimal *stack* of card denominations to cover it.
-4. **Apply** — one click fills the gift card fields and presses the retailer's own *Apply* button. The user always places the order themselves; the extension never submits a purchase.
+4. **Price check** — rates are compared across Stashly inventory and partner marketplaces (CardCash, Raise, GCX, GiftCardWiki); the best deal is surfaced, whether it's ours or a link-out.
+5. **Apply** — one click fills the gift card fields and presses the retailer's own *Apply* button. The user always places the order themselves; the extension never submits a purchase.
 
 ## Architecture
 
@@ -26,6 +27,7 @@ apps/
 ├── web/                 Next.js 16 app (marketplace, dashboard, admin)
 │   ├── src/app/(app)/api/   REST endpoints: /stack, /purchase, /balances, …
 │   ├── src/lib/stacking.ts  Greedy denomination-stacking algorithm
+│   ├── src/services/marketplace/  Hybrid rate aggregation (Stashly + partners)
 │   ├── src/services/payment/  Processor adapter pattern (Stripe test / Stax)
 │   └── supabase/        Postgres migrations with row-level security
 ├── inventory-service/   Express + SQLite service holding card codes
@@ -40,6 +42,7 @@ Design decisions worth noting:
 - **Reservation lifecycle.** Purchases reserve inventory first, then charge — a failed payment returns the reservation to the pool instead of leaking cards, and a background job expires stale holds.
 - **Minimal extension permissions.** Host permissions and content-script injection are scoped to the eight supported retailer domains (plus Stashly itself) — the browser refuses to run the extension anywhere else.
 - **The extension never places orders.** Auto-apply fills gift card fields and clicks the retailer's own apply button — never the order button. Submitting checkout is always a human action.
+- **Hybrid marketplace model.** Every price surface compares Stashly inventory against partner marketplaces behind a provider-adapter interface — best rate wins, in-app when it's ours, affiliate link-out when it isn't. Partners run on demo fixtures until API agreements exist; a failed provider drops out of the comparison instead of breaking it.
 - **Payment processor abstraction.** Stripe prohibits gift card resale, so payments go through an adapter interface (`services/payment/`) — Stripe test keys for local development, a Stax adapter for production.
 - **Demo mode.** `NEXT_PUBLIC_STASHLY_MODE=demo` serves mock inventory so the full flow can be demonstrated without live payment rails.
 
@@ -63,7 +66,7 @@ npm run dev -w apps/inventory-service
 Tests:
 
 ```bash
-npm test   # all suites: stacking algorithm, payment API, webhook handler, inventory reservations
+npm test   # all suites: stacking, marketplace aggregation, payment API, webhooks, inventory reservations
 ```
 
 ## Stack

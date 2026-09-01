@@ -25,6 +25,11 @@ async function handleMessage(message) {
       return data;
     }
 
+    case 'GET_RATES': {
+      const data = await api.getRates(message.retailerName, message.cartTotal);
+      return data;
+    }
+
     case 'GET_BALANCES': {
       const data = await api.getBalances();
       return { balances: data.balances || [] };

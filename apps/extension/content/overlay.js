@@ -39,6 +39,12 @@ function createOverlay(data) {
     buildNoSavingsOverlayDOM(card, data.retailer);
   }
 
+  // Marketplace comparison (Stashly + partner marketplaces) — all states
+  if (data.rates && data.rates.quotes && data.rates.quotes.length > 0) {
+    const body = card.querySelector('.stashly-body');
+    if (body) buildRateComparisonDOM(body, data.rates);
+  }
+
   shadow.appendChild(card);
   wireEvents(shadow, data);
 
@@ -219,6 +225,65 @@ function buildNoSavingsOverlayDOM(card, retailer) {
   card.appendChild(body);
 }
 
+function buildRateComparisonDOM(body, rates) {
+  const section = document.createElement('div');
+  section.className = 'stashly-rates';
+
+  const caption = document.createElement('p');
+  caption.className = 'stashly-rates-caption';
+  caption.textContent = 'Best prices across marketplaces';
+  section.appendChild(caption);
+
+  const bestSource = rates.best ? rates.best.source : null;
+
+  rates.quotes.slice(0, 5).forEach(q => {
+    const row = document.createElement(q.purchase_url ? 'button' : 'div');
+    row.className = 'stashly-rate-row';
+    if (q.source === bestSource) row.classList.add('stashly-rate-best');
+    if (q.purchase_url && /^https:\/\//.test(q.purchase_url)) {
+      row.dataset.action = 'external';
+      row.dataset.url = q.purchase_url;
+    }
+
+    const name = document.createElement('span');
+    name.className = 'stashly-rate-name';
+    name.textContent = q.via ? `${q.source_label} · via ${q.via}` : q.source_label;
+
+    const tags = document.createElement('span');
+    tags.className = 'stashly-rate-tags';
+    if (q.source === bestSource) {
+      const chip = document.createElement('span');
+      chip.className = 'stashly-chip stashly-chip-best';
+      chip.textContent = 'Best';
+      tags.appendChild(chip);
+    }
+    if (q.fulfillment === 'instant') {
+      const chip = document.createElement('span');
+      chip.className = 'stashly-chip';
+      chip.textContent = 'Instant';
+      tags.appendChild(chip);
+    }
+
+    const pct = document.createElement('span');
+    pct.className = 'stashly-rate-pct';
+    pct.textContent = `${q.discount_percent.toFixed(1)}% off`;
+
+    row.appendChild(name);
+    row.appendChild(tags);
+    row.appendChild(pct);
+    section.appendChild(row);
+  });
+
+  if (rates.cart_total && rates.estimated_savings) {
+    const est = document.createElement('p');
+    est.className = 'stashly-rates-estimate';
+    est.textContent = `Est. savings on this cart: $${rates.estimated_savings.toFixed(2)}`;
+    section.appendChild(est);
+  }
+
+  body.appendChild(section);
+}
+
 function wireEvents(shadow, data) {
   shadow.querySelectorAll('[data-action]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -244,6 +309,14 @@ function wireEvents(shadow, data) {
         case 'dashboard':
           window.open(`${getWebsiteUrl()}/dashboard`, '_blank');
           break;
+
+        case 'external': {
+          const url = btn.dataset.url;
+          if (url && /^https:\/\//.test(url)) {
+            window.open(url, '_blank', 'noopener');
+          }
+          break;
+        }
       }
     });
   });
@@ -352,6 +425,59 @@ function getOverlayStyles() {
       font-size: 13px;
       color: #1d4ed8;
       margin-bottom: 12px;
+    }
+    .stashly-rates {
+      border-top: 1px solid #e5e7eb;
+      margin-top: 12px;
+      padding-top: 10px;
+    }
+    .stashly-rates-caption {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin: 0 0 6px;
+    }
+    .stashly-rate-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      font-size: 12.5px;
+      color: #374151;
+      padding: 5px 6px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      font-family: inherit;
+      text-align: left;
+    }
+    button.stashly-rate-row { cursor: pointer; }
+    button.stashly-rate-row:hover { background: #f3f4f6; }
+    .stashly-rate-best { background: #f0fdf4; }
+    .stashly-rate-best:hover { background: #dcfce7; }
+    .stashly-rate-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .stashly-rate-tags { display: flex; gap: 4px; }
+    .stashly-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+    .stashly-chip-best { background: #dcfce7; color: #15803d; }
+    .stashly-rate-pct {
+      font-weight: 600;
+      color: #15803d;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .stashly-rates-estimate {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 8px 0 0;
+      text-align: center;
     }
     .stashly-btn {
       display: block;

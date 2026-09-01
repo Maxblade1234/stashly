@@ -137,6 +137,29 @@ const api = (function () {
     return fetchAPI('/retailers?name=' + encodeURIComponent(retailerName));
   }
 
+  /**
+   * POST /stack - compute the optimal gift-card stack for a cart total.
+   */
+  function getStack(retailerId, cartTotal) {
+    return fetchAPI('/stack', {
+      method: 'POST',
+      body: JSON.stringify({ retailer_id: retailerId, cart_total: cartTotal }),
+    });
+  }
+
+  /**
+   * GET /rates - compare discount rates across Stashly inventory and
+   * partner marketplaces (CardCash, Raise, GCX, GiftCardWiki).
+   * Public endpoint; works logged out.
+   */
+  function getRates(retailerName, cartTotal) {
+    let endpoint = '/rates?retailer=' + encodeURIComponent(retailerName);
+    if (cartTotal > 0) {
+      endpoint += '&cart_total=' + encodeURIComponent(cartTotal);
+    }
+    return fetchAPI(endpoint);
+  }
+
   // Expose public interface
   return {
     checkAuth,
@@ -145,6 +168,8 @@ const api = (function () {
     getTransactions,
     purchaseCard,
     getAvailability,
+    getStack,
+    getRates,
   };
 
 })();

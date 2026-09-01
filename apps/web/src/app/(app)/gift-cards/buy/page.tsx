@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import StackBreakdown from '@/components/StackBreakdown';
+import MarketplaceComparison from '@/components/MarketplaceComparison';
 import PurchaseConfirmation from '@/components/PurchaseConfirmation';
 import SavedCardPill from '@/components/SavedCardPill';
 import StripeProvider from '@/components/StripeProvider';
@@ -217,6 +218,13 @@ function BuyPageContent() {
       {stack && stack.cards.length > 0 && (
         <>
           <StackBreakdown stack={stack} />
+
+          <div className="mt-4">
+            <MarketplaceComparison
+              retailerName={stack.retailer_name}
+              cartTotal={stack.cart_total}
+            />
+          </div>
 
           {/* Payment method selection — live mode only */}
           {!isDemoMode && (
