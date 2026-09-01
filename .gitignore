@@ -8,3 +8,8 @@ dist/
 inventory.db
 .worktrees/
 .DS_Store
+.playwright-mcp/
+*.db-shm
+*.db-wal
+inventory.db*
+.claude/settings.local.json

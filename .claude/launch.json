@@ -6,6 +6,30 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "-w", "apps/web"],
       "port": 3000
+    },
+    {
+      "name": "inventory-service",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "apps/inventory-service"],
+      "port": 3511
+    },
+    {
+      "name": "design-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "design", "-p", "8090", "-c-1"],
+      "port": 8090
+    },
+    {
+      "name": "mockup1",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "Mockup_1", "-p", "8091", "-c-1"],
+      "port": 8091
+    },
+    {
+      "name": "mockup2",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "Mockup_2", "-p", "8092", "-c-1"],
+      "port": 8092
     }
   ]
 }
