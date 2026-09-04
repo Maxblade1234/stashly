@@ -6,8 +6,7 @@ Stashly is a gift card marketplace paired with a Chrome extension. Users buy bra
 
 <p>
   <a href="https://stashly-alpha.vercel.app/demo"><strong>▶ Try the checkout simulator</strong></a> &nbsp;·&nbsp;
-  <a href="https://stashly-alpha.vercel.app">Live site</a> &nbsp;·&nbsp;
-  <a href="docs/stashly-systems-design.md">Systems design</a>
+  <a href="https://stashly-alpha.vercel.app">Live site</a>
 </p>
 
 ![Stashly checkout simulator — the extension overlay running against a mock Apple checkout](docs/screenshots/checkout-simulator.png)
@@ -65,7 +64,7 @@ Design decisions worth noting:
 - **Demo accounts are isolated.** Each "try the demo" click provisions its own throwaway user (auto-confirmed, pre-seeded, pruned after 24h) via a service-role admin client, so evaluators never see each other's data and nobody can lock others out.
 - **Demo mode.** `NEXT_PUBLIC_STASHLY_MODE=demo` serves mock inventory so the full flow can be demonstrated without live payment rails.
 
-The full technical design — API contracts, KYC tiers, fraud/risk engine, checkout-detection scoring, trust zones, failure modes — is in **[docs/stashly-systems-design.md](docs/stashly-systems-design.md)** (20 sections). Design and implementation plans live in [docs/plans/](docs/plans/).
+Design and implementation plans live in [docs/plans/](docs/plans/). The full systems design (API contracts, KYC tiers, fraud/risk engine, detection scoring, trust zones, failure modes) is kept private and available on request.
 
 ## Running locally
 
