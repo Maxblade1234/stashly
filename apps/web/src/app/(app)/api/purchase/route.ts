@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getAvailability, reserveCards, releaseCards, unreserveCards } from '@/lib/inventory-client';
 import { createPaymentService, PaymentError } from '@/services/payment';
 import { calculateOptimalStack } from '@/lib/stacking';
@@ -11,8 +12,16 @@ import { randomUUID } from 'node:crypto';
 const MAX_PURCHASES_PER_HOUR = 3;
 const isDemoMode = process.env.NEXT_PUBLIC_STASHLY_MODE === 'demo';
 
+type AdminClient = NonNullable<ReturnType<typeof createAdminClient>>;
+
+/**
+ * Money-moving writes (transaction state, balances, savings totals) run through
+ * the service-role client: RLS deliberately grants users no UPDATE on
+ * transactions and no INSERT/UPDATE on balances, so the server is the only
+ * writer. Ownership is enforced here via user.id, not by the policy.
+ */
 async function updateStashlyBalance(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: AdminClient,
   userId: string,
   retailerId: string,
   amount: number
@@ -39,12 +48,31 @@ async function updateStashlyBalance(
   }
 }
 
+async function addSavings(admin: AdminClient, userId: string, amount: number) {
+  if (amount <= 0) return;
+  const { data: profile } = await admin
+    .from('profiles')
+    .select('savings_total')
+    .eq('id', userId)
+    .single();
+  const current = Number(profile?.savings_total ?? 0);
+  await admin
+    .from('profiles')
+    .update({ savings_total: Math.round((current + amount) * 100) / 100 })
+    .eq('id', userId);
+}
+
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const admin = createAdminClient();
+  if (!admin) {
+    return NextResponse.json({ error: 'Purchases are not configured on this deployment' }, { status: 503 });
   }
 
   if (!rateLimit(`purchase:${user.id}`, MAX_PURCHASES_PER_HOUR, 60 * 60 * 1000)) {
@@ -110,7 +138,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  await supabase.from('transactions').insert({
+  await admin.from('transactions').insert({
     id: transactionId,
     user_id: user.id,
     retailer_id,
@@ -136,7 +164,7 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    await supabase.from('transactions').update({
+    await admin.from('transactions').update({
       status: 'completed',
       cards_purchased: demoCodes.map(c => ({
         denomination: c.denomination,
@@ -146,7 +174,8 @@ export async function POST(req: NextRequest) {
     }).eq('id', transactionId);
 
     // Update Stashly balance
-    await updateStashlyBalance(supabase, user.id, retailer_id, stack.residual_balance);
+    await updateStashlyBalance(admin, user.id, retailer_id, stack.residual_balance);
+    await addSavings(admin, user.id, stack.savings);
 
     return NextResponse.json({
       transaction_id: transactionId,
@@ -220,7 +249,7 @@ export async function POST(req: NextRequest) {
 
     if (charge.status !== 'succeeded') {
       await unreserveCards(transactionId);
-      await supabase.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
+      await admin.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
       return NextResponse.json({ error: 'Payment not completed. Please try again.' }, { status: 402 });
     }
 
@@ -234,7 +263,7 @@ export async function POST(req: NextRequest) {
       }));
 
       // Update transaction record
-      await supabase.from('transactions').update({
+      await admin.from('transactions').update({
         status: 'completed',
         processor: process.env.PAYMENT_PROCESSOR || 'stripe',
         processor_transaction_id: charge.processorRef,
@@ -247,7 +276,8 @@ export async function POST(req: NextRequest) {
       }).eq('id', transactionId);
 
       // Update Stashly balance for residual
-      await updateStashlyBalance(supabase, user.id, retailer_id, stack.residual_balance);
+      await updateStashlyBalance(admin, user.id, retailer_id, stack.residual_balance);
+    await addSavings(admin, user.id, stack.savings);
 
       return NextResponse.json({
         transaction_id: transactionId,
@@ -272,7 +302,7 @@ export async function POST(req: NextRequest) {
     // Only reaches here if chargeCustomer() itself threw
     console.error('Payment failed:', err);
     await unreserveCards(transactionId);
-    await supabase.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
+    await admin.from('transactions').update({ status: 'failed' }).eq('id', transactionId);
 
     if (err instanceof PaymentError) {
       return NextResponse.json(
