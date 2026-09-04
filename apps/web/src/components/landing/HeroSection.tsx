@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import DemoLoginButton from '@/components/DemoLoginButton';
 
 /* ─── Cloud CSS (pseudo-elements can't be done inline) ─── */
 const cloudStyles = `
@@ -21,24 +22,55 @@ const cloudStyles = `
 }
 
 /* Cloud 1 */
-.hero-cloud-1 { width:280px; height:80px; top:60px; left:-60px; opacity:0.6; }
+.hero-cloud-1 { width:280px; height:80px; top:60px; left:-60px; opacity:0.6; animation: cloud-drift 46s ease-in-out infinite; }
 .hero-cloud-1::before { width:120px; height:120px; top:-60px; left:50px; }
 .hero-cloud-1::after  { width:80px;  height:80px;  top:-40px; left:140px; }
 
 /* Cloud 2 */
-.hero-cloud-2 { width:220px; height:60px; top:120px; right:-40px; opacity:0.4; }
+.hero-cloud-2 { width:220px; height:60px; top:120px; right:-40px; opacity:0.4; animation: cloud-drift-reverse 58s ease-in-out infinite; }
 .hero-cloud-2::before { width:100px; height:100px; top:-50px; left:30px; }
 .hero-cloud-2::after  { width:70px;  height:70px;  top:-35px; left:110px; }
 
 /* Cloud 3 */
-.hero-cloud-3 { width:180px; height:50px; top:240px; left:10%; opacity:0.3; }
+.hero-cloud-3 { width:180px; height:50px; top:240px; left:10%; opacity:0.3; animation: cloud-drift 38s ease-in-out infinite; animation-delay: -12s; }
 .hero-cloud-3::before { width:80px; height:80px; top:-40px; left:20px; }
 .hero-cloud-3::after  { width:60px; height:60px; top:-30px; left:90px; }
 
 /* Cloud 4 */
-.hero-cloud-4 { width:200px; height:55px; top:180px; right:8%; opacity:0.35; }
+.hero-cloud-4 { width:200px; height:55px; top:180px; right:8%; opacity:0.35; animation: cloud-drift-reverse 50s ease-in-out infinite; animation-delay: -20s; }
 .hero-cloud-4::before { width:90px; height:90px; top:-45px; left:25px; }
 .hero-cloud-4::after  { width:65px; height:65px; top:-32px; left:100px; }
+
+/* Slow lateral drift — gentle, no bounce, matches the brand motion rules */
+@keyframes cloud-drift {
+  0%   { transform: translateX(0) translateY(0); }
+  50%  { transform: translateX(60px) translateY(-6px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+@keyframes cloud-drift-reverse {
+  0%   { transform: translateX(0) translateY(0); }
+  50%  { transform: translateX(-60px) translateY(4px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+/* Hero entrance — headline, copy, and buttons rise in sequence on load */
+.hero-enter {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: hero-rise 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.hero-enter-1 { animation-delay: 0.05s; }
+.hero-enter-2 { animation-delay: 0.2s; }
+.hero-enter-3 { animation-delay: 0.35s; }
+.hero-enter-4 { animation-delay: 0.55s; }
+@keyframes hero-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cloud { animation: none !important; }
+  .hero-enter { animation: none !important; opacity: 1; transform: none; }
+}
 
 @media (max-width: 768px) {
   .hero-sidebar { display: none !important; }
@@ -217,6 +249,7 @@ export default function HeroSection() {
           }}
         >
           <h1
+            className="hero-enter hero-enter-1"
             style={{
               fontSize: 'clamp(40px, 6vw, 72px)',
               fontWeight: 500,
@@ -231,6 +264,7 @@ export default function HeroSection() {
           </h1>
 
           <p
+            className="hero-enter hero-enter-2"
             style={{
               fontSize: 19,
               maxWidth: 540,
@@ -246,6 +280,7 @@ export default function HeroSection() {
 
           {/* Buttons */}
           <div
+            className="hero-enter hero-enter-3"
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -288,8 +323,8 @@ export default function HeroSection() {
               </svg>
             </Link>
 
-            <a
-              href="#features"
+            <Link
+              href="/demo"
               style={{
                 background: 'transparent',
                 color: '#1A1A1A',
@@ -302,6 +337,7 @@ export default function HeroSection() {
                 textDecoration: 'none',
                 display: 'inline-flex',
                 alignItems: 'center',
+                gap: 8,
               }}
               onMouseEnter={(e) => {
                 const t = e.currentTarget;
@@ -314,13 +350,22 @@ export default function HeroSection() {
                 t.style.transform = 'translateY(0)';
               }}
             >
-              See features
-            </a>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3" /></svg>
+              See it at checkout
+            </Link>
+          </div>
+
+          <div
+            className="hero-enter hero-enter-3"
+            style={{ display: 'flex', justifyContent: 'center', marginTop: 14 }}
+          >
+            <DemoLoginButton variant="link" label="or open a demo account — no signup" />
           </div>
         </div>
 
         {/* ─── 3D Dashboard Mockup ─── */}
         <div
+          className="hero-enter hero-enter-4"
           style={{
             perspective: 1200,
             marginTop: 80,

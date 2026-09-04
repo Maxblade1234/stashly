@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2 } from 'lucide-react';
+import DemoLoginButton from '@/components/DemoLoginButton';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -179,6 +180,16 @@ export default function LoginPage() {
             {loading ? <Loader2 size={18} className="animate-spin" /> : <>Sign In <ArrowRight size={16} /></>}
           </button>
         </form>
+
+        {/* Demo account — for evaluators who shouldn't need to sign up */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0 16px' }}>
+          <span style={{ flex: 1, height: 1, background: 'var(--border, #E8E3DB)' }} />
+          <span style={{ fontSize: 12, color: 'var(--text-light, #9A9A9A)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>or</span>
+          <span style={{ flex: 1, height: 1, background: 'var(--border, #E8E3DB)' }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <DemoLoginButton variant="secondary" label="Try a demo account" style={{ width: '100%', justifyContent: 'center', padding: '12px 24px', fontSize: 15 }} />
+        </div>
 
         {/* Sign up link */}
         <p style={{ fontSize: '14px', color: 'var(--text-body, #6B6B6B)', textAlign: 'center', marginTop: '24px' }}>

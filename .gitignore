@@ -13,3 +13,4 @@ inventory.db
 *.db-wal
 inventory.db*
 .claude/settings.local.json
+.vercel
