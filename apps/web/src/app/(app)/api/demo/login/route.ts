@@ -18,8 +18,20 @@ import { rateLimit } from '@/lib/rate-limit';
 const DEMO_EMAIL_DOMAIN = 'demo.stashly.app';
 const MAX_DEMO_ACCOUNTS_PER_HOUR = 5;
 const PRUNE_AFTER_MS = 24 * 60 * 60 * 1000;
+/** Hard ceiling on live demo users. The per-IP limit is best-effort (in-memory,
+ *  per instance, and IPs are cheap); this global cap is the real bound. */
+const MAX_ACTIVE_DEMO_USERS = 300;
+const LIST_PAGE_SIZE = 200;
+const MAX_LIST_PAGES = 10;
+const isDemoMode = process.env.NEXT_PUBLIC_STASHLY_MODE === 'demo';
 
 export async function POST(req: NextRequest) {
+  // Demo accounts seed fabricated transactions — never allow that on a live
+  // (real-money) deployment, regardless of who asks.
+  if (!isDemoMode) {
+    return NextResponse.json({ error: 'Not available' }, { status: 404 });
+  }
+
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local';
   if (!rateLimit(`demo-login:${ip}`, MAX_DEMO_ACCOUNTS_PER_HOUR, 60 * 60 * 1000)) {
     return NextResponse.json({ error: 'Too many demo accounts requested. Try again later.' }, { status: 429 });
@@ -30,8 +42,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Demo accounts are not configured on this deployment.' }, { status: 503 });
   }
 
-  // Housekeeping: prune stale demo users so the auth table doesn't grow forever.
-  await pruneStaleDemoUsers(admin).catch(() => {});
+  // Housekeeping + global cap: prune stale demo users, then refuse if the
+  // pool is still full. Bounds growth even if the per-IP limit is evaded.
+  const activeDemoUsers = await pruneStaleDemoUsers(admin).catch(() => Number.POSITIVE_INFINITY);
+  if (activeDemoUsers >= MAX_ACTIVE_DEMO_USERS) {
+    return NextResponse.json(
+      { error: 'The demo is at capacity right now. Please try again in a little while.' },
+      { status: 429 }
+    );
+  }
 
   const email = `demo-${randomBytes(4).toString('hex')}@${DEMO_EMAIL_DOMAIN}`;
   const password = randomBytes(18).toString('base64url');
@@ -146,11 +165,28 @@ async function seedDemoData(admin: Admin, userId: string) {
   await admin.from('profiles').update({ savings_total: totalSavings }).eq('id', userId);
 }
 
-async function pruneStaleDemoUsers(admin: Admin) {
-  const { data } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+/**
+ * Deletes demo users older than PRUNE_AFTER_MS and returns how many demo
+ * users remain. Walks every page of the user list (newest first) so old
+ * accounts can't hide past the first page; bounded by MAX_LIST_PAGES.
+ */
+async function pruneStaleDemoUsers(admin: Admin): Promise<number> {
   const cutoff = Date.now() - PRUNE_AFTER_MS;
-  const stale = (data?.users || []).filter(
-    (u) => u.email?.endsWith(`@${DEMO_EMAIL_DOMAIN}`) && new Date(u.created_at).getTime() < cutoff
-  );
-  await Promise.allSettled(stale.map((u) => admin.auth.admin.deleteUser(u.id)));
+  const stale: string[] = [];
+  let active = 0;
+
+  for (let page = 1; page <= MAX_LIST_PAGES; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: LIST_PAGE_SIZE });
+    if (error) throw new Error(error.message);
+    const users = data?.users || [];
+    for (const u of users) {
+      if (!u.email?.endsWith(`@${DEMO_EMAIL_DOMAIN}`)) continue;
+      if (new Date(u.created_at).getTime() < cutoff) stale.push(u.id);
+      else active++;
+    }
+    if (users.length < LIST_PAGE_SIZE) break;
+  }
+
+  await Promise.allSettled(stale.map((id) => admin.auth.admin.deleteUser(id)));
+  return active;
 }
