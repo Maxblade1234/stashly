@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, Loader2 } from 'lucide-react';
+import DemoLoginButton from '@/components/DemoLoginButton';
 
 function SignupForm() {
   const router = useRouter();
@@ -231,6 +232,14 @@ function SignupForm() {
         </form>
 
         {/* Sign in link */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0 16px' }}>
+          <span style={{ flex: 1, height: 1, background: 'var(--border, #E8E3DB)' }} />
+          <span style={{ fontSize: 12, color: 'var(--text-light, #9A9A9A)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>or just look around</span>
+          <span style={{ flex: 1, height: 1, background: 'var(--border, #E8E3DB)' }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+          <DemoLoginButton variant="secondary" label="Try a demo account" style={{ width: '100%', justifyContent: 'center', padding: '12px 24px', fontSize: 15 }} />
+        </div>
         <p style={{ fontSize: '14px', color: 'var(--text-body, #6B6B6B)', textAlign: 'center', marginTop: '24px' }}>
           Already have an account?{' '}
           <Link href="/login" style={{ color: 'var(--text-primary, #1A1A1A)', fontWeight: 500, textDecoration: 'none' }}
