@@ -26,5 +26,6 @@ export async function GET() {
     balance: b.balance,
   }));
 
-  return NextResponse.json(balances);
+  // Consumers (dashboard BalanceList, extension service worker) read `balances`.
+  return NextResponse.json({ balances });
 }
