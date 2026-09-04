@@ -52,8 +52,10 @@ export function middleware(request: NextRequest) {
   // Note: Server components handle their own auth checks;
   // this middleware provides early protection for static pages
   if (protectedPaths.some(p => pathname.startsWith(p))) {
+    // @supabase/ssr chunks large sessions into `sb-<ref>-auth-token.0`, `.1`, …
+    // so match on the token marker anywhere in the name, not only at the end.
     const supabaseAuth = request.cookies.getAll().find(c =>
-      c.name.startsWith('sb-') && c.name.endsWith('-auth-token')
+      c.name.startsWith('sb-') && c.name.includes('-auth-token')
     );
 
     if (!supabaseAuth) {

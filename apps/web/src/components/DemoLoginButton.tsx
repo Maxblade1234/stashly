@@ -45,7 +45,12 @@ export default function DemoLoginButton({
       });
       if (signInError) throw new Error(signInError.message);
 
-      router.push('/dashboard?demo=1');
+      // The SSR client writes the session cookie right after sign-in; wait for it
+      // before navigating so the middleware and server layout see the session.
+      for (let i = 0; i < 30 && !document.cookie.includes('-auth-token'); i++) {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      window.location.assign('/dashboard?demo=1');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.');
       setLoading(false);

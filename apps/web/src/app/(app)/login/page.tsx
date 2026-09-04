@@ -29,7 +29,13 @@ export default function LoginPage() {
       return;
     }
 
+    // Wait for the session cookie to land before navigating, so the
+    // middleware and server layout see the session on the very next request.
+    for (let i = 0; i < 30 && !document.cookie.includes('-auth-token'); i++) {
+      await new Promise((r) => setTimeout(r, 100));
+    }
     router.push('/dashboard');
+    router.refresh();
   };
 
   return (
